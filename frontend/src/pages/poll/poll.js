@@ -3,10 +3,10 @@ import {
   Card,
   CardActions,
   CardContent,
+  Container,
   Typography,
 } from "@mui/material";
 import React from "react";
-import NavBar from "../../components/appbar/appbar";
 
 const Poll = () => {
   const posts = [
@@ -22,8 +22,7 @@ const Poll = () => {
   ];
 
   return (
-    <div>
-      <NavBar />
+    <Container>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {posts.map((post, index) => (
           <Card key={index} variant="outlined" style={{ margin: "8px" }}>
@@ -41,7 +40,7 @@ const Poll = () => {
           </Card>
         ))}
       </div>
-    </div>
+    </Container>
   );
 };
 

@@ -2,6 +2,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import AlertComponent from "./components/alert/alert";
+import NavBar from "./components/appbar/Navbar";
 import Login from "./pages/login/login";
 import Polldetail from "./pages/poll-detail/poll-detail";
 import Poll from "./pages/poll/poll";
@@ -12,6 +13,7 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
+        <NavBar />
         <AlertComponent />
 
         <Routes>
