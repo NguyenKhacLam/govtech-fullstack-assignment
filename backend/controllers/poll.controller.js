@@ -3,69 +3,81 @@ const catchAsync = require("../utils/catchAsync");
 const optionController = require("./option.controller");
 const AppError = require("./../utils/appError");
 
-exports.getAllPolls = catchAsync(async (req, res, next) => {
-  const page = req.query.page || 1;
-  const limit = req.query.limit || 10;
-  const skippedItems = (page - 1) * limit;
+const pollController = {
+  getAllPolls: catchAsync(async (req, res, next) => {
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    const skippedItems = (page - 1) * limit;
 
-  const polls = await Poll.findAll({ offset: skippedItems, limit });
+    const polls = await Poll.findAll({ offset: skippedItems, limit });
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      data: polls,
-    },
-  });
-});
+    res.status(200).json({
+      status: "success",
+      data: {
+        data: polls,
+      },
+    });
+  }),
+  getPoll: catchAsync(async (req, res, next) => {
+    const { pollId } = req.params;
 
-exports.getPoll = catchAsync(async (req, res, next) => {
-  const { pollId } = req.params;
+    const [poll, options] = await Promise.all([
+      Poll.findOne({ where: { id: pollId } }),
+      optionController.getAllOptionWithVotedCount(pollId),
+    ]);
 
-  const poll = await Poll.findOne({ where: { id: pollId } });
+    const data = {
+      name: poll.name,
+      description: poll.description,
+      createdAt: poll.createdAt,
+      updatedAt: poll.updatedAt,
+      options,
+    };
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      data: poll,
-    },
-  });
-});
+    res.status(200).json({
+      status: "success",
+      data: {
+        data,
+      },
+    });
+  }),
+  createPoll: catchAsync(async (req, res, next) => {
+    const { name, description, options } = req.body;
 
-exports.createPoll = catchAsync(async (req, res, next) => {
-  const { name, description, options } = req.body;
+    const newPoll = await Poll.create({
+      name,
+      description,
+      userId: req.user.id,
+    });
 
-  const newPoll = await Poll.create({
-    name,
-    description,
-    userId: req.user.id,
-  });
+    await optionController.bulkInsertOption(newPoll.id, options);
 
-  await optionController.bulkInsertOption(newPoll.id, options);
+    res.status(201).json({
+      status: "success",
+      data: {
+        data: newPoll,
+      },
+    });
+  }),
+  deletePoll: catchAsync(async (req, res, next) => {
+    const { pollId } = req.params;
 
-  res.status(201).json({
-    status: "success",
-    data: {
-      data: newPoll,
-    },
-  });
-});
+    const poll = await Poll.findOne({ where: { id: pollId } });
 
-exports.deletePoll = catchAsync(async (req, res, next) => {
-  const { pollId } = req.params;
+    if (!poll) {
+      return next(new AppError("Poll does not found!", 400));
+    }
 
-  const poll = await Poll.findOne({ where: { id: pollId } });
+    await User.destroy({
+      where: {
+        pollId,
+      },
+    });
 
-  if (!poll) {
-    return next(new AppError("Poll does not found!", 400));
-  }
+    res.status(200).json({
+      status: "success",
+    });
+  }),
+};
 
-  await User.destroy({
-    where: {
-      pollId,
-    },
-  });
-
-  res.status(200).json({
-    status: "success",
-  });
-});
+module.exports = pollController;

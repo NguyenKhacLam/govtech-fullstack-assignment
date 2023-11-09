@@ -1,47 +1,34 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Container,
-  Typography,
-} from "@mui/material";
-import React from "react";
+import { Container } from "@mui/material";
+import { PropTypes } from "prop-types";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import PollItem from "../../components/PollItem/PollItem";
+import Spinner from "../../components/Spinner/Spinner";
+import { getPolls } from "./../../redux/actions/poll";
 
-const Poll = () => {
-  const posts = [
-    {
-      title: "Post 1",
-      body: "This is the content of Post 1.",
-    },
-    {
-      title: "Post 2",
-      body: "This is the content of Post 2.",
-    },
-    // Add more posts as needed
-  ];
+const Poll = ({ getPolls, pollData: { polls, loading } }) => {
+  useEffect(() => {
+    getPolls();
+  }, [getPolls]);
 
-  return (
+  return loading ? (
+    <Spinner />
+  ) : (
     <Container>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {posts.map((post, index) => (
-          <Card key={index} variant="outlined" style={{ margin: "8px" }}>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                {post.title}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {post.body}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Learn More</Button>
-            </CardActions>
-          </Card>
-        ))}
-      </div>
+      {polls.map((poll, index) => (
+        <PollItem poll={poll} key={index} />
+      ))}
     </Container>
   );
 };
 
-export default Poll;
+Poll.propTypes = {
+  getPolls: PropTypes.func.isRequired,
+  pollData: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  pollData: state.polls,
+});
+
+export default connect(mapStateToProps, { getPolls })(Poll);

@@ -9,7 +9,6 @@ const router = express.Router();
 
 router.post("/signup", validation(signUpSchema), authController.signup);
 router.post("/login", validation(signInSchema), authController.login);
-router.get("/logout", authController.logout);
 router.get("/me", authMiddleware, authController.getMe);
 
 module.exports = router;
