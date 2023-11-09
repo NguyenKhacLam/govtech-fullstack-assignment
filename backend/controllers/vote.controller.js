@@ -44,10 +44,8 @@ const voteController = {
     return res.status(200).json({
       status: "success",
       data: {
-        data: {
-          pollId: Number(pollId),
-          optionId: Number(optionId),
-        },
+        pollId: Number(pollId),
+        optionId: Number(optionId),
       },
     });
   }),

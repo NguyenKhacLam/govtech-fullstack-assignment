@@ -14,7 +14,7 @@ function pollReducer(state = initialState, action) {
     case GET_POLLS:
       return {
         ...state,
-        polls: payload,
+        polls: payload.polls,
         loading: false,
       };
 
@@ -27,14 +27,11 @@ function pollReducer(state = initialState, action) {
 
     case VOTE:
       const { optionId } = action.payload;
-      console.log(action.payload, "sad");
 
       // Find the option that the user voted for
       const votedOption = state.poll.options.find(
         (option) => option.id === optionId
       );
-
-      console.log(votedOption);
 
       // If the option exists, update the count and totalVote
       if (votedOption) {

@@ -14,7 +14,7 @@ const pollController = {
     res.status(200).json({
       status: "success",
       data: {
-        data: polls,
+        polls,
       },
     });
   }),
@@ -57,7 +57,7 @@ const pollController = {
     res.status(201).json({
       status: "success",
       data: {
-        data: newPoll,
+        newPoll,
       },
     });
   }),

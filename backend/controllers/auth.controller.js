@@ -87,7 +87,7 @@ const authController = {
     res.status(200).json({
       status: "success",
       data: {
-        data: user,
+        user,
       },
     });
   }),

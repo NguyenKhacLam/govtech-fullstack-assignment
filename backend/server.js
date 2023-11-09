@@ -27,23 +27,18 @@ async function start() {
     io.on("connection", (socket) => {
       console.log("User connected");
 
-      // socket.on("setup", (pollData) => {
-      //   console.log(pollData.id);
-      //   socket.join(pollData.id);
-      //   socket.emit("connected");
-      // });
-
       socket.on("join poll", (poll) => {
         socket.join(poll.id);
         console.log("user join poll: " + poll.id);
-        io.emit("message", "New user join");
       });
 
       socket.on("vote", (vote) => {
-        const poll = vote.poll;
-        console.log(poll, ">>>>>");
+        console.log("Received vote:", vote);
+        socket.in(vote.poll).emit("user voted", vote);
+      });
 
-        io.emit("user voted", vote);
+      socket.on("disconnect", () => {
+        console.log("User disconnected");
       });
     });
   } catch (error) {

@@ -7,7 +7,7 @@ export const getPolls = (page, limit) => async (dispatch) => {
     const res = await api.get("/polls", { params: { page, limit } });
     dispatch({
       type: GET_POLLS,
-      payload: res.data.data.data,
+      payload: res.data.data,
     });
   } catch (err) {
     dispatch({
@@ -20,6 +20,7 @@ export const getPolls = (page, limit) => async (dispatch) => {
 export const getPoll = (pollId) => async (dispatch) => {
   try {
     const res = await api.get(`/polls/${pollId}`);
+
     dispatch({
       type: GET_POLL,
       payload: res.data.data.data,
@@ -56,7 +57,7 @@ export const votePoll = (pollId, optionId) => async (dispatch) => {
 
     dispatch({
       type: VOTE,
-      payload: res.data.data.data,
+      payload: res.data.data,
     });
 
     dispatch(setAlert("You have voted", "success"));

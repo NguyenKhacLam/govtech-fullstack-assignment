@@ -55,10 +55,11 @@ export const logout = () => ({ type: LOGOUT });
 export const loadUser = () => async (dispatch) => {
   try {
     const res = await api.get("/users/me");
+    console.log(res.data);
 
     dispatch({
       type: USER_LOADED,
-      payload: res.data,
+      payload: res.data.data,
     });
   } catch (err) {
     dispatch({
