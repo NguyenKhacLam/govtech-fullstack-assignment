@@ -29,6 +29,7 @@ async function start() {
 
       socket.on("join poll", (poll) => {
         socket.join(poll.id);
+        console.log(socket.rooms);
         console.log("user join poll: " + poll.id);
       });
 

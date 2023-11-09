@@ -19,21 +19,15 @@ const Polldetail = ({ getPoll, votePoll, poll: { poll, loading } }) => {
 
   useEffect(() => {
     socket = io("http://localhost:8000");
-    socket.emit("join poll", { id });
-    // socket.on("user voted", (newVote) => {
-    //   console.log(newVote, ">>>");
-    // });
+    socket.emit("join poll", { id: Number(id) });
+    socket.on("user voted", (newVote) => {
+      console.log(newVote, ">>>");
+    });
 
     return () => {
       socket.disconnect();
     };
   }, []);
-
-  useEffect(() => {
-    socket.on("user voted", (newVote) => {
-      console.log(newVote, ">>>");
-    });
-  });
 
   const handleVote = (optionId) => {
     console.log("voted");
