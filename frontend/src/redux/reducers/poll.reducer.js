@@ -1,4 +1,4 @@
-import { GET_POLL, GET_POLLS } from "../actions/types";
+import { GET_POLL, GET_POLLS, VOTE } from "../actions/types";
 
 const initialState = {
   polls: [],
@@ -24,6 +24,35 @@ function pollReducer(state = initialState, action) {
         poll: payload,
         loading: false,
       };
+
+    case VOTE:
+      const { optionId } = action.payload;
+      console.log(action.payload, "sad");
+
+      // Find the option that the user voted for
+      const votedOption = state.poll.options.find(
+        (option) => option.id === optionId
+      );
+
+      console.log(votedOption);
+
+      // If the option exists, update the count and totalVote
+      if (votedOption) {
+        return {
+          ...state,
+          poll: {
+            ...state.poll,
+            totalVote: state.poll.totalVote + 1,
+            options: state.poll.options.map((option) =>
+              option.id === optionId
+                ? { ...option, count: option.count + 1 }
+                : option
+            ),
+          },
+        };
+      }
+      // If the option does not exist, return the current state
+      return state;
 
     default:
       return state;

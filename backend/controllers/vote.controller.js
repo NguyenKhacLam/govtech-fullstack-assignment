@@ -41,7 +41,15 @@ const voteController = {
       userId: req.user.id,
     });
 
-    return res.status(200).json({ message: "Success" });
+    return res.status(200).json({
+      status: "success",
+      data: {
+        data: {
+          pollId: Number(pollId),
+          optionId: Number(optionId),
+        },
+      },
+    });
   }),
 };
 

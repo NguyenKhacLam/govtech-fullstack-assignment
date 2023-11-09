@@ -1,6 +1,6 @@
 import api from "../../services/api";
 import { setAlert } from "./alert";
-import { ADD_POLL, GET_POLL, GET_POLLS, POLL_ERROR } from "./types";
+import { ADD_POLL, GET_POLL, GET_POLLS, POLL_ERROR, VOTE } from "./types";
 
 export const getPolls = (page, limit) => async (dispatch) => {
   try {
@@ -47,5 +47,21 @@ export const addPoll = (formData) => async (dispatch) => {
       type: POLL_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
+  }
+};
+
+export const votePoll = (pollId, optionId) => async (dispatch) => {
+  try {
+    const res = await api.post(`/votes/${pollId}/${optionId}`);
+
+    dispatch({
+      type: VOTE,
+      payload: res.data.data.data,
+    });
+
+    dispatch(setAlert("You have voted", "success"));
+  } catch (err) {
+    const error = err.response.data.message;
+    dispatch(setAlert(error, "error"));
   }
 };

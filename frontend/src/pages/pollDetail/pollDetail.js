@@ -1,22 +1,38 @@
 import { Box, Button, Container, List, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { io } from "socket.io-client";
 import OptionItem from "../../components/OptionItem/OptionItem";
 import Spinner from "../../components/Spinner/Spinner";
-import { getPoll } from "./../../redux/actions/poll";
+import { getPoll, votePoll } from "./../../redux/actions/poll";
 
-const Polldetail = ({ getPoll, poll: { poll, loading } }) => {
+let socket;
+
+const Polldetail = ({ getPoll, votePoll, poll: { poll, loading } }) => {
   const { id } = useParams();
-  const [totalVote, setTotalVote] = useState(0);
 
   useEffect(() => {
     getPoll(id);
-    setTotalVote(
-      poll.options.reduce((total, option) => total + option.count, 0)
-    );
   }, [getPoll, id]);
+
+  useEffect(() => {
+    socket = io("http://localhost:8000");
+    socket.emit("join poll", { id });
+  }, []);
+
+  useEffect(() => {
+    socket.on("user voted", (newVote) => {
+      console.log(newVote);
+    });
+  });
+
+  const handleVote = (optionId) => {
+    console.log("voted");
+    socket.emit("vote", { poll: Number(id), option: optionId });
+    votePoll(Number(id), optionId);
+  };
 
   return loading || !poll ? (
     <Spinner />
@@ -38,9 +54,15 @@ const Polldetail = ({ getPoll, poll: { poll, loading } }) => {
       </Box>
 
       <List>
-        {poll.options.map((option, index) => (
-          <OptionItem option={option} totalVote={totalVote} key={index} />
-        ))}
+        {poll &&
+          poll.options.map((option, index) => (
+            <OptionItem
+              option={option}
+              totalVote={poll.totalVote}
+              key={index}
+              handleVote={handleVote}
+            />
+          ))}
       </List>
     </Container>
   );
@@ -55,4 +77,4 @@ const mapStateToProps = (state) => ({
   poll: state.polls,
 });
 
-export default connect(mapStateToProps, { getPoll })(Polldetail);
+export default connect(mapStateToProps, { getPoll, votePoll })(Polldetail);

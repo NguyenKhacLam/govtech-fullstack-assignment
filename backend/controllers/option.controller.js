@@ -26,8 +26,6 @@ const optionController = {
       type: Sequelize.QueryTypes.SELECT,
     });
 
-    console.log(results);
-
     return results;
   },
 };

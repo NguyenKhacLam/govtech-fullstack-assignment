@@ -1,4 +1,4 @@
-const { Poll } = require("./../models");
+const { Poll, Vote } = require("./../models");
 const catchAsync = require("../utils/catchAsync");
 const optionController = require("./option.controller");
 const AppError = require("./../utils/appError");
@@ -21,9 +21,10 @@ const pollController = {
   getPoll: catchAsync(async (req, res, next) => {
     const { pollId } = req.params;
 
-    const [poll, options] = await Promise.all([
+    const [poll, options, totalVote] = await Promise.all([
       Poll.findOne({ where: { id: pollId } }),
       optionController.getAllOptionWithVotedCount(pollId),
+      Vote.count({ where: { pollId } }),
     ]);
 
     const data = {
@@ -31,6 +32,7 @@ const pollController = {
       description: poll.description,
       createdAt: poll.createdAt,
       updatedAt: poll.updatedAt,
+      totalVote,
       options,
     };
 

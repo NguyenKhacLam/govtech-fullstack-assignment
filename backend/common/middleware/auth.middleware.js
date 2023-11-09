@@ -22,7 +22,6 @@ module.exports = function (req, res, next) {
       if (error) {
         return next(new AppError("Token is not valid", 401));
       } else {
-        console.log(decoded);
         req.user = decoded;
         res.locals.user = decoded;
         next();
