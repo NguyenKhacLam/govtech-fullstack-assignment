@@ -1,4 +1,10 @@
-import { GET_POLL, GET_POLLS, RECEIVE_VOTE, VOTE } from "../actions/types";
+import {
+  GET_POLL,
+  GET_POLLS,
+  POLL_ERROR,
+  RECEIVE_VOTE,
+  VOTE,
+} from "../actions/types";
 
 const initialState = {
   polls: [],
@@ -25,16 +31,11 @@ function pollReducer(state = initialState, action) {
         loading: false,
       };
 
-    case VOTE:
     case RECEIVE_VOTE:
-      const { optionId } = action.payload;
-
-      // Find the option that the user voted for
       const votedOption = state.poll.options.find(
-        (option) => option.id === optionId
+        (option) => option.id === action.payload.optionId
       );
 
-      // If the option exists, update the count and totalVote
       if (votedOption) {
         return {
           ...state,
@@ -42,7 +43,30 @@ function pollReducer(state = initialState, action) {
             ...state.poll,
             totalVote: state.poll.totalVote + 1,
             options: state.poll.options.map((option) =>
-              option.id === optionId
+              option.id === action.payload.optionId
+                ? { ...option, count: option.count + 1 }
+                : option
+            ),
+          },
+        };
+      }
+      break;
+
+    case VOTE:
+      const vote = state.poll.options.find(
+        (option) => option.id === action.payload.optionId
+      );
+
+      // If the option exists, update the count and totalVote
+      if (vote) {
+        return {
+          ...state,
+          poll: {
+            ...state.poll,
+            userCanVote: false,
+            totalVote: state.poll.totalVote + 1,
+            options: state.poll.options.map((option) =>
+              option.id === action.payload.optionId
                 ? { ...option, count: option.count + 1 }
                 : option
             ),
@@ -51,7 +75,12 @@ function pollReducer(state = initialState, action) {
       }
       // If the option does not exist, return the current state
       return state;
-
+    case POLL_ERROR:
+      return {
+        ...state,
+        error: payload,
+        loading: false,
+      };
     default:
       return state;
   }

@@ -41,7 +41,7 @@ function App() {
         <Routes>
           <Route element={<PrivateRoute />}>
             <Route exact path="/" element={<Poll />} />
-            <Route exact path="/poll/:id" element={<Polldetail />} />
+            <Route exact path="/poll/:pollId" element={<Polldetail />} />
             <Route exact path="/poll/create" element={<CreatePoll />} />
           </Route>
           <Route exact path="/login" element={<Login />} />

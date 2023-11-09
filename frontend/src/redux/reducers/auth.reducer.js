@@ -17,11 +17,12 @@ function authReducer(state = initialState, action) {
 
   switch (type) {
     case USER_LOADED:
+      console.log(payload);
       return {
         ...state,
         isAuthenticated: true,
         loading: false,
-        user: payload,
+        user: payload.user,
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:

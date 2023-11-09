@@ -15,16 +15,17 @@ const Polldetail = ({
   votePoll,
   receiveVote,
   poll: { poll, loading },
+  user: { id },
 }) => {
-  const { id } = useParams();
+  const { pollId } = useParams();
 
   useEffect(() => {
-    getPoll(id);
-  }, [getPoll, id]);
+    getPoll(pollId);
+  }, [getPoll, pollId]);
 
   useEffect(() => {
     socket = io("http://localhost:8000");
-    socket.emit("join poll", { id: Number(id) });
+    socket.emit("join poll", { id: Number(pollId) });
     socket.on("user voted", (newVote) => {
       console.log(newVote, ">>>");
       receiveVote(newVote);
@@ -37,8 +38,8 @@ const Polldetail = ({
 
   const handleVote = (optionId) => {
     console.log("voted");
-    socket.emit("vote", { pollId: Number(id), optionId: optionId });
-    votePoll(Number(id), optionId);
+    socket.emit("vote", { pollId: Number(pollId), optionId: optionId });
+    votePoll(Number(pollId), optionId);
   };
 
   return loading || !poll ? (
@@ -59,7 +60,6 @@ const Polldetail = ({
         </div>
         <Button variant="contained">Edit poll</Button>
       </Box>
-
       <List>
         {poll &&
           poll.options.map((option, index) => (
@@ -68,6 +68,7 @@ const Polldetail = ({
               totalVote={poll.totalVote}
               key={index}
               handleVote={handleVote}
+              canVote={poll.userId !== id && poll.userCanVote}
             />
           ))}
       </List>
@@ -82,6 +83,7 @@ Polldetail.propTypes = {
 
 const mapStateToProps = (state) => ({
   poll: state.polls,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, { getPoll, votePoll, receiveVote })(

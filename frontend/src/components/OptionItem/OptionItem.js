@@ -1,7 +1,7 @@
 import { Box, Button, Card, Typography } from "@mui/material";
 import React from "react";
 
-function OptionItem({ option, totalVote, handleVote }) {
+function OptionItem({ option, totalVote, handleVote, canVote }) {
   const votePercent = totalVote > 0 ? (option.count / totalVote) * 100 : 0;
 
   return (
@@ -26,7 +26,7 @@ function OptionItem({ option, totalVote, handleVote }) {
           <Typography level="title-lg">{option.name}</Typography>
           <Typography>Voted: {option.count}</Typography>
         </Box>
-        <Button onClick={() => handleVote(option.id)}>Vote</Button>
+        {canVote && <Button onClick={() => handleVote(option.id)}>Vote</Button>}
       </Box>
       <progress value={votePercent} max={100} /> {votePercent}%
     </Card>

@@ -21,17 +21,20 @@ const pollController = {
   getPoll: catchAsync(async (req, res, next) => {
     const { pollId } = req.params;
 
-    const [poll, options, totalVote] = await Promise.all([
+    const [poll, options, totalVote, userCanVote] = await Promise.all([
       Poll.findOne({ where: { id: pollId } }),
       optionController.getAllOptionWithVotedCount(pollId),
       Vote.count({ where: { pollId } }),
+      Vote.count({ where: { pollId, userId: req.user.id } }),
     ]);
 
     const data = {
       name: poll.name,
       description: poll.description,
-      createdAt: poll.createdAt,
+      userId: poll.userId,
       updatedAt: poll.updatedAt,
+      updatedAt: poll.updatedAt,
+      userCanVote: userCanVote === 0,
       totalVote,
       options,
     };
@@ -45,6 +48,12 @@ const pollController = {
   }),
   createPoll: catchAsync(async (req, res, next) => {
     const { name, description, options } = req.body;
+
+    if (options.length < 5 || options.length > 5) {
+      return next(
+        new AppError("Poll must have at least 2 option and max 5 options!", 400)
+      );
+    }
 
     const newPoll = await Poll.create({
       name,

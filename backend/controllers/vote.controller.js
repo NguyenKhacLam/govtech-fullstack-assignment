@@ -19,9 +19,9 @@ const voteController = {
       return next(new AppError("Poll or option is not found", 404));
     }
 
-    //   if (poll.userId === req.user.id) {
-    //     return next(new AppError("You can not vote to your own poll", 400));
-    //   }
+    if (poll.userId === req.user.id) {
+      return next(new AppError("You can not vote to your own poll", 400));
+    }
 
     const isVoted = await Vote.findOne({
       where: [
