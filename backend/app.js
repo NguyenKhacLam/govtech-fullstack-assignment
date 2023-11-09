@@ -5,6 +5,7 @@ const globalErrorHandler = require("./controllers/error.controller");
 const userRouter = require("./routes/user.route");
 const pollRouter = require("./routes/poll.route");
 const voteRouter = require("./routes/vote.route");
+const optionRouter = require("./routes/option.route");
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ app.use(helmet());
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/polls", pollRouter);
 app.use("/api/v1/votes", voteRouter);
+app.use("/api/v1/options", optionRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

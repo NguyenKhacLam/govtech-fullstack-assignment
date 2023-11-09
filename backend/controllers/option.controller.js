@@ -6,9 +6,9 @@ exports.getAllOptionWithVotedCount = catchAsync(async (req, res, next) => {
   const { pollId } = req.params;
 
   const query = `
-    SELECT o.*, count(v.user_id) as number_of_vote from "option" o
-    LEFT JOIN user_voted v on v.option_id = o."id"
-    WHERE o.poll_id = :pollId
+    SELECT o.*, CAST(count(v."userId") as INTEGER) as count  from "option" o
+    LEFT JOIN vote v ON v."optionId" = o."id"
+    WHERE o."pollId" = :pollId
     GROUP BY o."id"
   `;
 
