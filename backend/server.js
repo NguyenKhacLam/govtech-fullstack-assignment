@@ -35,7 +35,7 @@ async function start() {
 
       socket.on("vote", (vote) => {
         console.log("Received vote:", vote);
-        socket.in(vote.poll).emit("user voted", vote);
+        socket.in(vote.pollId).emit("user voted", vote);
       });
 
       socket.on("disconnect", () => {

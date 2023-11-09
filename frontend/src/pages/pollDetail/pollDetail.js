@@ -6,11 +6,16 @@ import { Link, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import OptionItem from "../../components/OptionItem/OptionItem";
 import Spinner from "../../components/Spinner/Spinner";
-import { getPoll, votePoll } from "./../../redux/actions/poll";
+import { getPoll, receiveVote, votePoll } from "./../../redux/actions/poll";
 
 let socket;
 
-const Polldetail = ({ getPoll, votePoll, poll: { poll, loading } }) => {
+const Polldetail = ({
+  getPoll,
+  votePoll,
+  receiveVote,
+  poll: { poll, loading },
+}) => {
   const { id } = useParams();
 
   useEffect(() => {
@@ -22,6 +27,7 @@ const Polldetail = ({ getPoll, votePoll, poll: { poll, loading } }) => {
     socket.emit("join poll", { id: Number(id) });
     socket.on("user voted", (newVote) => {
       console.log(newVote, ">>>");
+      receiveVote(newVote);
     });
 
     return () => {
@@ -31,7 +37,7 @@ const Polldetail = ({ getPoll, votePoll, poll: { poll, loading } }) => {
 
   const handleVote = (optionId) => {
     console.log("voted");
-    socket.emit("vote", { poll: Number(id), option: optionId });
+    socket.emit("vote", { pollId: Number(id), optionId: optionId });
     votePoll(Number(id), optionId);
   };
 
@@ -78,4 +84,6 @@ const mapStateToProps = (state) => ({
   poll: state.polls,
 });
 
-export default connect(mapStateToProps, { getPoll, votePoll })(Polldetail);
+export default connect(mapStateToProps, { getPoll, votePoll, receiveVote })(
+  Polldetail
+);

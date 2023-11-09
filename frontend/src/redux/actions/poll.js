@@ -1,6 +1,13 @@
 import api from "../../services/api";
 import { setAlert } from "./alert";
-import { ADD_POLL, GET_POLL, GET_POLLS, POLL_ERROR, VOTE } from "./types";
+import {
+  ADD_POLL,
+  GET_POLL,
+  GET_POLLS,
+  POLL_ERROR,
+  RECEIVE_VOTE,
+  VOTE,
+} from "./types";
 
 export const getPolls = (page, limit) => async (dispatch) => {
   try {
@@ -66,3 +73,5 @@ export const votePoll = (pollId, optionId) => async (dispatch) => {
     dispatch(setAlert(error, "error"));
   }
 };
+
+export const receiveVote = (vote) => ({ type: RECEIVE_VOTE, payload: vote });

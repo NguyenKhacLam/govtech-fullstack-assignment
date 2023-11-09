@@ -1,4 +1,4 @@
-import { GET_POLL, GET_POLLS, VOTE } from "../actions/types";
+import { GET_POLL, GET_POLLS, RECEIVE_VOTE, VOTE } from "../actions/types";
 
 const initialState = {
   polls: [],
@@ -26,6 +26,7 @@ function pollReducer(state = initialState, action) {
       };
 
     case VOTE:
+    case RECEIVE_VOTE:
       const { optionId } = action.payload;
 
       // Find the option that the user voted for

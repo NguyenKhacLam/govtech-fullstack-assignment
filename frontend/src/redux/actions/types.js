@@ -21,3 +21,4 @@ export const POLL_ERROR = "POLL_ERROR";
 export const DELETE_POST = "DELETE_POST";
 export const ADD_POLL = "ADD_POST";
 export const VOTE = "VOTE";
+export const RECEIVE_VOTE = "RECEIVE_VOTE";
