@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
+import BarChart from "../../components/Chart/Bar/BarChart";
 import OptionItem from "../../components/OptionItem/OptionItem";
 import Spinner from "../../components/Spinner/Spinner";
 import { getPoll, receiveVote, votePoll } from "./../../redux/actions/poll";
@@ -72,6 +73,13 @@ const Polldetail = ({
             />
           ))}
       </List>
+
+      {poll.userId === id && (
+        <BarChart
+          chartData={poll.options.map((item) => item.count)}
+          chartLabels={poll.options.map((item) => item.name)}
+        />
+      )}
     </Container>
   );
 };
