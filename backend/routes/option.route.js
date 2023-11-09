@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-router.route("/:pollId").get(optionController.getAllOptionWithVotedCount);
+// router.route("/:pollId").get(optionController.getAllOptionWithVotedCount);
 
 module.exports = router;

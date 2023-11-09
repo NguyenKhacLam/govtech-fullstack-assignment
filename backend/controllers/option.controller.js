@@ -2,36 +2,32 @@ const { Sequelize } = require("sequelize");
 const { Option, sequelize } = require("./../models");
 const catchAsync = require("../utils/catchAsync");
 
-exports.getAllOptionWithVotedCount = catchAsync(async (req, res, next) => {
-  const { pollId } = req.params;
+const optionController = {
+  bulkInsertOption: catchAsync(async (pollId, optionsArray) => {
+    const newOptionData = optionsArray.map((item) => ({
+      name: item.name,
+      pollId,
+    }));
 
-  const query = `
-    SELECT o.*, count(v.user_id) as number_of_vote from "option" o
-    LEFT JOIN user_voted v on v.option_id = o."id"
-    WHERE o.poll_id = :pollId
-    GROUP BY o."id"
-  `;
+    const newOptions = await Option.bulkCreate(newOptionData);
 
-  const results = await sequelize.query(query, {
-    replacements: { pollId },
-    type: Sequelize.QueryTypes.SELECT,
-  });
+    return newOptions;
+  }),
+  getAllOptionWithVotedCount: async (pollId) => {
+    const query = `
+      SELECT o.*, CAST(count(v."userId") as INTEGER) as count  from "option" o
+      LEFT JOIN vote v ON v."optionId" = o."id"
+      WHERE o."pollId" = :pollId
+      GROUP BY o."id"
+    `;
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      data: results,
-    },
-  });
-});
+    const results = await sequelize.query(query, {
+      replacements: { pollId },
+      type: Sequelize.QueryTypes.SELECT,
+    });
 
-exports.bulkInsertOption = catchAsync(async (pollId, optionsArray) => {
-  const newOptionData = optionsArray.map((item) => ({
-    name: item.name,
-    pollId,
-  }));
+    return results;
+  },
+};
 
-  const newOptions = await Option.bulkCreate(newOptionData);
-
-  return newOptions;
-});
+module.exports = optionController;
