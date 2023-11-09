@@ -1,5 +1,5 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "./../../redux/actions/auth";
 
-const NavBar = ({ isAuthenticated, logout }) => {
+const NavBar = ({ isAuthenticated, user, logout }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleMenu = (event) => {
@@ -33,33 +33,36 @@ const NavBar = ({ isAuthenticated, logout }) => {
               <Link to="/poll/create">Create Poll</Link>
             </Button>
             <div style={{ flexGrow: 1 }}></div>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorEl)}
-              // onClose={handleClose}
-            >
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography>{user ? user.username : ""}</Typography>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorEl)}
+                // onClose={handleClose}
+              >
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>
           </Toolbar>
         </AppBar>
       </Box>
@@ -69,11 +72,13 @@ const NavBar = ({ isAuthenticated, logout }) => {
 
 NavBar.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, { logout })(NavBar);
