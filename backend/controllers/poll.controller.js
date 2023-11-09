@@ -9,7 +9,11 @@ const pollController = {
     const limit = req.query.limit || 10;
     const skippedItems = (page - 1) * limit;
 
-    const polls = await Poll.findAll({ offset: skippedItems, limit });
+    const polls = await Poll.findAll({
+      order: [["createdAt", "DESC"]],
+      offset: skippedItems,
+      limit,
+    });
 
     res.status(200).json({
       status: "success",
@@ -49,7 +53,7 @@ const pollController = {
   createPoll: catchAsync(async (req, res, next) => {
     const { name, description, options } = req.body;
 
-    if (options.length < 5 || options.length > 5) {
+    if (options.length < 2 || options.length > 5) {
       return next(
         new AppError("Poll must have at least 2 option and max 5 options!", 400)
       );

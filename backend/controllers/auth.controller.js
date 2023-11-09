@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { User } = require("./../models");
-const { promisify } = require("util");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("./../utils/appError");
 
 const signToken = (id) => {
+  console.log(process.env.JWT_SECRET);
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
