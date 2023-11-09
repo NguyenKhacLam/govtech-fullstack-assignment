@@ -8,11 +8,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { PropTypes } from "prop-types";
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { addPoll } from "./../../redux/actions/poll";
 
-export const CreatePoll = (props) => {
+export const CreatePoll = ({ addPoll }) => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [optionName, setOptionName] = useState("");
   const [options, setOption] = useState([]);
@@ -20,6 +23,9 @@ export const CreatePoll = (props) => {
     name: "",
     description: "",
   });
+
+  const { name, description } = formData;
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -45,6 +51,12 @@ export const CreatePoll = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    addPoll({
+      name: formData.name,
+      description: formData.description,
+      options,
+    });
+    navigate("/");
   };
 
   return (
@@ -66,22 +78,22 @@ export const CreatePoll = (props) => {
           label="Name"
           type="text"
           variant="outlined"
-          value={formData.name}
+          value={name}
           onChange={onChange}
           margin="normal"
           fullWidth
-          name="username"
+          name="name"
           required
         />
         <TextField
           label="Description"
           type="text"
           variant="outlined"
-          value={formData.description}
+          value={description}
           onChange={onChange}
           margin="normal"
           fullWidth
-          name="email"
+          name="description"
           required
         />
         <div
@@ -163,8 +175,10 @@ export const CreatePoll = (props) => {
   );
 };
 
+CreatePoll.propTypes = {
+  addPoll: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({});
 
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreatePoll);
+export default connect(mapStateToProps, { addPoll })(CreatePoll);

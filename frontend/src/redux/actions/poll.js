@@ -1,5 +1,6 @@
 import api from "../../services/api";
-import { GET_POLL, GET_POLLS, POLL_ERROR } from "./types";
+import { setAlert } from "./alert";
+import { ADD_POLL, GET_POLL, GET_POLLS, POLL_ERROR } from "./types";
 
 export const getPolls = (page, limit) => async (dispatch) => {
   try {
@@ -17,13 +18,30 @@ export const getPolls = (page, limit) => async (dispatch) => {
 };
 
 export const getPoll = (pollId) => async (dispatch) => {
-  console.log(12314123);
   try {
     const res = await api.get(`/polls/${pollId}`);
     dispatch({
       type: GET_POLL,
       payload: res.data.data.data,
     });
+  } catch (err) {
+    dispatch({
+      type: POLL_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+export const addPoll = (formData) => async (dispatch) => {
+  try {
+    const res = await api.post("/polls", formData);
+
+    dispatch({
+      type: ADD_POLL,
+      payload: res.data,
+    });
+
+    dispatch(setAlert("Poll created", "success"));
   } catch (err) {
     dispatch({
       type: POLL_ERROR,
