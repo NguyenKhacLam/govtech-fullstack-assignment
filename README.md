@@ -40,6 +40,7 @@ Before you begin, ensure you have the following software installed on your machi
    Duplicate env.example and then rename it to .env and enter your configs
 
 5. **Run Migrations and Seeds:**
+   You just need to do this once
 
    ```
         npx sequelize-cli db:migrate
