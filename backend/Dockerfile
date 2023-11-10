@@ -7,7 +7,6 @@ COPY package*.json /app/
 COPY . /app
 
 RUN npm install
-RUN npx sequelize init
 RUN npx sequelize-cli db:migrate
 RUN npx sequelize-cli db:seed:all
 
