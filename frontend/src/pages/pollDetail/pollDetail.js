@@ -40,7 +40,6 @@ const Polldetail = ({
     socket = io("http://localhost:8000");
     socket.emit("join poll", { id: Number(pollId) });
     socket.on("user voted", (newVote) => {
-      console.log(newVote, ">>>");
       receiveVote(newVote);
     });
 
@@ -50,7 +49,6 @@ const Polldetail = ({
   }, []);
 
   const handleVote = (optionId) => {
-    console.log("voted");
     socket.emit("vote", { pollId: Number(pollId), optionId: optionId });
     votePoll(Number(pollId), optionId);
   };

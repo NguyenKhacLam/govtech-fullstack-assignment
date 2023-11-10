@@ -20,7 +20,6 @@ export const register = (formData) => async (dispatch) => {
     });
     // dispatch(loadUser());
   } catch (err) {
-    console.log(err);
     const error = err.response.data.message;
     dispatch(setAlert(error, "error"));
 
@@ -56,7 +55,6 @@ export const logout = () => ({ type: LOGOUT });
 export const loadUser = () => async (dispatch) => {
   try {
     const res = await api.get("/users/me");
-    console.log(res.data);
 
     dispatch({
       type: USER_LOADED,
