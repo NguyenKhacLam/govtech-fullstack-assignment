@@ -14,10 +14,18 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     confirmPassword: "",
   });
 
+  const [error, setError] = useState({
+    username: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
+
   const { username, email, password, confirmPassword } = formData;
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError({ ...error, [e.target.name]: e.target.value === "" });
   };
 
   const onSubmit = (e) => {
@@ -71,6 +79,8 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                 fullWidth
                 name="username"
                 required
+                helperText="Please enter username"
+                error={error.username}
               />
               <TextField
                 InputLabelProps={{ shrink: true }}
@@ -83,6 +93,8 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                 fullWidth
                 name="email"
                 required
+                helperText="Please enter email"
+                error={error.email}
               />
               <TextField
                 InputLabelProps={{ shrink: true }}
@@ -95,6 +107,8 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                 fullWidth
                 name="password"
                 required
+                helperText="Please enter password"
+                error={error.password}
               />
               <TextField
                 InputLabelProps={{ shrink: true }}
@@ -107,6 +121,8 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                 fullWidth
                 name="confirmPassword"
                 required
+                helperText="Please reenter password"
+                error={error.confirmPassword}
               />
             </Stack>
 

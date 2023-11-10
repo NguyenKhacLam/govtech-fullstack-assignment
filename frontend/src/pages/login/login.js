@@ -11,10 +11,16 @@ const Login = ({ login, isAuthenticated }) => {
     password: "",
   });
 
+  const [error, setError] = useState({
+    email: false,
+    password: false,
+  });
+
   const { email, password } = formData;
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError({ ...error, [e.target.name]: e.target.value === "" });
   };
 
   const onSubmit = (e) => {
@@ -63,6 +69,8 @@ const Login = ({ login, isAuthenticated }) => {
                 fullWidth
                 name="email"
                 InputLabelProps={{ shrink: true }}
+                helperText="Please enter email"
+                error={error.email}
               />
               <TextField
                 label="Password"
@@ -74,6 +82,8 @@ const Login = ({ login, isAuthenticated }) => {
                 fullWidth
                 name="password"
                 InputLabelProps={{ shrink: true }}
+                helperText="Please enter password"
+                error={error.password}
               />
             </Stack>
 
