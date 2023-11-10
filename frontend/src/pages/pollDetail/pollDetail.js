@@ -45,7 +45,7 @@ const Polldetail = ({
   }, [getPoll, pollId]);
 
   useEffect(() => {
-    socket = io(process.env.SOCKET_ENDPOINT);
+    socket = io(process.env.REACT_APP_SOCKET_ENDPOINT);
     socket.emit("join poll", { id: Number(pollId) });
     socket.on("user voted", (newVote) => {
       receiveVote(newVote);
