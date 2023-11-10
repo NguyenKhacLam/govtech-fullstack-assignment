@@ -28,7 +28,12 @@ function OptionItem({ option, totalVote, handleVote, canVote }) {
         </Box>
         {canVote && <Button onClick={() => handleVote(option.id)}>Vote</Button>}
       </Box>
-      <progress value={votePercent} max={100} /> {votePercent}%
+      {!canVote && (
+        <div>
+          <progress value={votePercent} max={100} />
+          {votePercent}%
+        </div>
+      )}
     </Card>
   );
 }

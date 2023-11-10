@@ -84,9 +84,11 @@ const Polldetail = ({
           <Typography variant="h4">{poll?.name}</Typography>
           <Typography variant="subtitle1">{poll?.description}</Typography>
         </div>
-        <Button variant="contained" color="error" onClick={handleDeletePoll}>
-          Close poll
-        </Button>
+        {poll?.userId === id && (
+          <Button variant="contained" color="error" onClick={handleDeletePoll}>
+            Close poll
+          </Button>
+        )}
       </Box>
       <Card sx={{ mt: 2 }}>
         <CardContent>
