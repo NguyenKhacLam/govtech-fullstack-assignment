@@ -45,7 +45,7 @@ const Polldetail = ({
   }, [getPoll, pollId]);
 
   useEffect(() => {
-    socket = io("http://localhost:8000");
+    socket = io(process.env.SOCKET_ENDPOINT);
     socket.emit("join poll", { id: Number(pollId) });
     socket.on("user voted", (newVote) => {
       receiveVote(newVote);
