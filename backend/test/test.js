@@ -41,10 +41,14 @@ describe("Poll and Voting Routes", () => {
     const loginResponse = await chai
       .request(app)
       .post("/api/v1/users/signup")
-      .send({
-        username: "demo",
-        email: "test@gmail.com",
-        password: "testpassword",
+      .send({ username: "demo", email: "demo@gmail.com", password: "123456" })
+      .end((err, res) => {
+        if (err) {
+          console.error(err);
+          done(err);
+        }
+        authToken = res.body.token;
+        done();
       });
 
     console.log(loginResponse.body.token, ">>>>>");
