@@ -5,7 +5,7 @@ DB_HOST=database-container
 DB_PORT=5432
 DB_USER=postgres
 DB_PASSWORD=lamnk
-DB_NAME=pollApp
+DB_NAME=pollapp
 
 # Function to check if the database is ready
 check_db() {
