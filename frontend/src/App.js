@@ -7,6 +7,7 @@ import AlertComponent from "./components/alert/alert";
 import NavBar from "./components/appbar/Navbar";
 import CreatePoll from "./pages/createPoll/createPoll";
 import Login from "./pages/login/login";
+import PageNotFound from "./pages/pageNotFound/PageNotFound";
 import Poll from "./pages/poll/poll";
 import Polldetail from "./pages/pollDetail/pollDetail";
 import Register from "./pages/register/register";
@@ -46,6 +47,7 @@ function App() {
           </Route>
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/register" element={<Register />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
     </Provider>

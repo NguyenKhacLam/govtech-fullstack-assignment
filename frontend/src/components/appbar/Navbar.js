@@ -9,11 +9,12 @@ import Toolbar from "@mui/material/Toolbar";
 import { PropTypes } from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { logout } from "./../../redux/actions/auth";
 
 const NavBar = ({ isAuthenticated, user, logout }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -29,8 +30,13 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" style={{ marginBottom: 10 }}>
           <Toolbar>
-            <Button color="success" variant="contained" component="div">
-              <Link to="/poll/create">Create Poll</Link>
+            <Button
+              color="success"
+              variant="contained"
+              component="div"
+              onClick={() => navigate("/poll/create")}
+            >
+              Create Poll
             </Button>
             <div style={{ flexGrow: 1 }}></div>
             <div style={{ display: "flex", alignItems: "center" }}>
