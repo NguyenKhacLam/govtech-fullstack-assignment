@@ -30,14 +30,14 @@ const Polldetail = ({
   deletePoll,
   receiveVote,
   poll: { poll, loading },
-  user: { id },
+  user: { _id },
 }) => {
   const { pollId } = useParams();
   const navigate = useNavigate();
 
   const canVote = useMemo(
-    () => poll?.userId !== id && poll?.userCanVote,
-    [poll, id]
+    () => poll?.userId !== _id && poll?.userCanVote,
+    [poll, _id]
   );
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const Polldetail = ({
 
   useEffect(() => {
     socket = io(process.env.REACT_APP_SOCKET_ENDPOINT);
-    socket.emit("join poll", { id: Number(pollId) });
+    socket.emit("join poll", { id: pollId });
     socket.on("user voted", (newVote) => {
       receiveVote(newVote);
     });
@@ -57,8 +57,8 @@ const Polldetail = ({
   }, []);
 
   const handleVote = (optionId) => {
-    socket.emit("vote", { pollId: Number(pollId), optionId: optionId });
-    votePoll(Number(pollId), optionId);
+    socket.emit("vote", { pollId, optionId });
+    votePoll(pollId, optionId);
   };
 
   const handleDeletePoll = () => {
@@ -84,7 +84,7 @@ const Polldetail = ({
           <Typography variant="h4">{poll?.name}</Typography>
           <Typography variant="subtitle1">{poll?.description}</Typography>
         </div>
-        {poll?.userId === id && (
+        {poll?.userId === _id && (
           <Button variant="contained" color="error" onClick={handleDeletePoll}>
             Close poll
           </Button>
@@ -107,7 +107,7 @@ const Polldetail = ({
         </CardContent>
       </Card>
 
-      {poll?.userId === id && (
+      {poll?.userId === _id && (
         <BarChart
           chartData={poll.options.map((item) => item.count)}
           chartLabels={poll.options.map((item) => item.name)}

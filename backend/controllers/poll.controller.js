@@ -1,4 +1,5 @@
-const { Poll, Vote, Option } = require("./../models");
+const Poll = require("./../models/poll.model");
+const Option = require("./../models/option.model");
 const catchAsync = require("../utils/catchAsync");
 const optionController = require("./option.controller");
 const AppError = require("./../utils/appError");
@@ -7,13 +8,9 @@ const pollController = {
   getAllPolls: catchAsync(async (req, res, next) => {
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
-    const skippedItems = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
-    const polls = await Poll.findAll({
-      order: [["createdAt", "DESC"]],
-      offset: skippedItems,
-      limit,
-    });
+    const polls = await Poll.find().skip(skip).limit(limit).sort("-createdAt");
 
     res.status(200).json({
       status: "success",
@@ -25,22 +22,31 @@ const pollController = {
   getPoll: catchAsync(async (req, res, next) => {
     const { pollId } = req.params;
 
-    const [poll, options, totalVote, userCanVote] = await Promise.all([
-      Poll.findOne({ where: { id: pollId } }),
-      optionController.getAllOptionWithVotedCount(pollId),
-      Vote.count({ where: { pollId } }),
-      Vote.count({ where: { pollId, userId: req.user.id } }),
-    ]);
+    const poll = await Poll.findById(pollId)
+      .populate({ path: "options" })
+      .exec();
+
+    if (!poll) {
+      return next(new AppError("Poll does not found!", 400));
+    }
+
+    console.log(poll.userId.toString(), req.user.id);
+
+    const userCanVote =
+      poll.options.some((option) => !option.votes.includes(req.user.id)) &&
+      poll.userId.toString() !== req.user.id;
 
     const data = {
       name: poll.name,
       description: poll.description,
       userId: poll.userId,
       updatedAt: poll.updatedAt,
-      updatedAt: poll.updatedAt,
-      userCanVote: userCanVote === 0,
-      totalVote,
-      options,
+      options: poll.options,
+      userCanVote,
+      totalVote: poll?.options.reduce(
+        (acc, option) => option.votes.length + acc,
+        0
+      ),
     };
 
     res.status(200).json({
@@ -77,27 +83,19 @@ const pollController = {
   deletePoll: catchAsync(async (req, res, next) => {
     const { pollId } = req.params;
 
-    const poll = await Poll.findOne({ where: { id: pollId } });
+    const poll = await Poll.findById({ _id: pollId });
 
     if (!poll) {
       return next(new AppError("Poll does not found!", 400));
     }
 
-    if (poll.userId !== req.user.id) {
+    if (poll.userId.toString() !== req.user.id) {
       return next(new AppError("You can not delete this poll!", 400));
     }
 
     await Promise.all([
-      await Poll.destroy({
-        where: {
-          id: pollId,
-        },
-      }),
-      await Option.destroy({
-        where: {
-          pollId,
-        },
-      }),
+      await Poll.findByIdAndDelete(pollId),
+      Option.deleteMany({ pollId }),
     ]);
 
     res.status(200).json({

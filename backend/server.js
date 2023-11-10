@@ -1,17 +1,19 @@
 const app = require("./app");
 const dotenv = require("dotenv");
 const { Server } = require("socket.io");
+const mongoose = require("mongoose");
 
 dotenv.config();
-
-const { sequelize } = require("./models");
 
 const port = process.env.PORT || 8000;
 
 async function start() {
   try {
-    await sequelize.sync({ force: false });
-    console.log("Database connection has been established successfully.");
+    mongoose
+      .connect(
+        `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
+      )
+      .then(() => console.log("DB connection successful!"));
 
     const expressServer = app.listen(port, () => {
       console.log(`App running on port ${port}...`);

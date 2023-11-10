@@ -21,7 +21,7 @@ function PollItem({ poll }) {
       </CardContent>
       <CardActions>
         <Button size="small">
-          <Link to={`poll/${poll.id}`}>Learn More</Link>
+          <Link to={`poll/${poll._id}`}>Learn More</Link>
         </Button>
       </CardActions>
     </Card>

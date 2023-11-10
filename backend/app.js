@@ -5,7 +5,6 @@ const globalErrorHandler = require("./controllers/error.controller");
 const userRouter = require("./routes/user.route");
 const pollRouter = require("./routes/poll.route");
 const voteRouter = require("./routes/vote.route");
-const optionRouter = require("./routes/option.route");
 const rateLimit = require("express-rate-limit");
 const xss = require("xss-clean");
 const AppError = require("./utils/appError");
@@ -26,7 +25,6 @@ app.use("/api", limiter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/polls", pollRouter);
 app.use("/api/v1/votes", voteRouter);
-app.use("/api/v1/options", optionRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

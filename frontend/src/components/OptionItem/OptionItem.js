@@ -13,7 +13,7 @@ function OptionItem({ option, totalVote, handleVote, canVote }) {
         overflow: "auto",
         resize: "horizontal",
       }}
-      key={option.id}
+      key={option._id}
     >
       <Box
         sx={{
@@ -26,7 +26,9 @@ function OptionItem({ option, totalVote, handleVote, canVote }) {
           <Typography level="title-lg">{option.name}</Typography>
           <Typography>Voted: {option.count}</Typography>
         </Box>
-        {canVote && <Button onClick={() => handleVote(option.id)}>Vote</Button>}
+        {canVote && (
+          <Button onClick={() => handleVote(option._id)}>Vote</Button>
+        )}
       </Box>
       {!canVote && (
         <div>
