@@ -57,6 +57,10 @@ const authController = {
 
     const user = await User.findById(userId);
 
+    if (!user) {
+      return next(new AppError("User is not exist!", 401));
+    }
+
     res.status(200).json({
       status: "success",
       data: {

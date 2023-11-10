@@ -30,11 +30,12 @@ const pollController = {
       return next(new AppError("Poll does not found!", 400));
     }
 
-    console.log(poll.userId.toString(), req.user.id);
+    const voteList = poll.options
+      .map((option) => option.votes.flatMap((i) => i._id.toString()))
+      .flatMap((i) => i);
 
     const userCanVote =
-      poll.options.some((option) => !option.votes.includes(req.user.id)) &&
-      poll.userId.toString() !== req.user.id;
+      !voteList.includes(req.user.id) && poll.userId.toString() !== req.user.id;
 
     const data = {
       name: poll.name,

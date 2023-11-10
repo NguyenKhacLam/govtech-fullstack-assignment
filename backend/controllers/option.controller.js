@@ -14,7 +14,7 @@ const optionController = {
     return newOptions;
   }),
   checkIfUserCanVote: async (pollId, userId) => {
-    const poll = await Poll.findOne({ _id: pollId }).populate({
+    const poll = await Poll.findById(pollId).populate({
       path: "options",
     });
     let hasVoted = false;

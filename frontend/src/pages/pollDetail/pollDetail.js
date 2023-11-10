@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Box,
   Button,
@@ -9,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { PropTypes } from "prop-types";
-import  { useEffect, useMemo,  } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -36,7 +35,6 @@ const Polldetail = ({
 
   const navigate = useNavigate();
 
-
   const { pollId } = useParams();
 
   const [currentId, setCurrentId] = useState();
@@ -47,7 +45,7 @@ const Polldetail = ({
 
   useEffect(() => {
     socket = io("http://localhost:8000");
-    socket.emit("join poll", { id: Number(pollId) });
+    socket.emit("join poll", { id: pollId });
     socket.on("user voted", (newVote) => {
       console.log(newVote, ">>>");
       receiveVote(newVote);
