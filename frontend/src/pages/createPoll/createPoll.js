@@ -1,3 +1,4 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Backdrop,
   Box,
@@ -10,13 +11,12 @@ import {
 } from "@mui/material";
 import { PropTypes } from "prop-types";
 import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { connect, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { addPoll } from "./../../redux/actions/poll";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
 import { setAlert } from "../../redux/actions/alert";
+import { addPoll } from "./../../redux/actions/poll";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -33,31 +33,31 @@ export const CreatePoll = ({ addPoll }) => {
     mode: "all",
   });
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [optionName, setOptionName] = useState("");
   const [options, setOption] = useState([]);
-  const [errorOption, setErrorOption] = useState('');
+  const [errorOption, setErrorOption] = useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleAddOption = () => {
     if (!optionName) {
-      setErrorOption('Option name is required')
-      return 
+      setErrorOption("Option name is required");
+      return;
     }
 
-      setOption([...options, { name: optionName }]);
-      setOptionName("");
+    setOption([...options, { name: optionName }]);
+    setOptionName("");
   };
 
   useEffect(() => {
     if (optionName) {
-      setErrorOption('')
+      setErrorOption("");
     }
-  }, [optionName])
+  }, [optionName]);
 
   const handleRemoveOption = (indexToRemove) => {
     const newOption = options.filter((_, index) => index !== indexToRemove);
@@ -76,8 +76,10 @@ export const CreatePoll = ({ addPoll }) => {
 
   const onSubmit = ({ name, description }) => {
     if (options.length < 2 || options.length > 5) {
-     dispatch(setAlert('Poll must have at least 2 option and max 5 options', "error"));
-    return
+      dispatch(
+        setAlert("Poll must have at least 2 option and max 5 options", "error")
+      );
+      return;
     }
 
     addPoll(
@@ -120,16 +122,12 @@ export const CreatePoll = ({ addPoll }) => {
           />
           <TextField
             {...register("description")}
+            label={"Description"}
             name="description"
-            label={
-              errors.description ? errors.description?.message : "Description"
-            }
-            error={!!errors.description}
             type="text"
             variant="outlined"
             margin="normal"
             fullWidth
-            required
           />
           <div
             style={{
