@@ -35,7 +35,6 @@ function pollReducer(state = initialState, action) {
     case DELETE_POLL:
       return {
         ...state,
-        polls: state.polls.filter((i) => i !== payload.pollId),
         poll: null,
         loading: false,
       };

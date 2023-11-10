@@ -36,17 +36,15 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <NavBar />
         <AlertComponent />
-
         <Routes>
-          <Route element={<PrivateRoute />}>
-            <Route exact path="/" element={<Poll />} />
-            <Route exact path="/poll/:pollId" element={<Polldetail />} />
-            <Route exact path="/poll/create" element={<CreatePoll />} />
+          <Route path="/" element={<PrivateRoute />}>
+            <Route index element={<Poll />} />
+            <Route path="/poll/:pollId" element={<Polldetail />} />
+            <Route path="/poll/create" element={<CreatePoll />} />
           </Route>
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

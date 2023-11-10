@@ -1,42 +1,68 @@
-import { Box, Button, Card, Typography } from "@mui/material";
-import React from "react";
+import { Box, Radio, Typography } from "@mui/material";
 
-function OptionItem({ option, totalVote, handleVote, canVote }) {
+function OptionItem({
+  option,
+  totalVote,
+  value,
+  currentId,
+  onChange,
+  canVote,
+}) {
   const votePercent = totalVote > 0 ? (option.count / totalVote) * 100 : 0;
 
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        padding: "1rem",
-        margin: "1rem",
-        overflow: "auto",
-        resize: "horizontal",
-      }}
-      key={option._id}
+    <Box
+      position="relative"
+      width="100%"
+      height="50px"
+      backgroundColor="#F9F9F9"
+      borderRadius="16px"
     >
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
+        height="100%"
+        width={`${votePercent.toFixed()}%`}
+        backgroundColor="#E9F2F9"
+        borderRadius="16px 0px 0px 16px"
+      />
+      <Box
+        position="absolute"
+        top="50%"
+        left="20px"
+        sx={{ transform: "translate(0, -50%)" }}
       >
-        <Box>
-          <Typography level="title-lg">{option.name}</Typography>
-          <Typography>Voted: {option.count}</Typography>
+        <Box display="flex" alignItems="center">
+          {canVote && (
+            <Radio
+              value={value}
+              onChange={() => {
+                onChange(value);
+              }}
+              checked={currentId == value}
+            />
+          )}
+
+          <Typography variant="subtile1" fontWeight={600}>
+            {option.name}
+          </Typography>
         </Box>
-        {canVote && (
-          <Button onClick={() => handleVote(option._id)}>Vote</Button>
-        )}
       </Box>
-      {!canVote && (
-        <div>
-          <progress value={votePercent} max={100} />
-          {votePercent}%
-        </div>
-      )}
-    </Card>
+
+      <Box
+        position="absolute"
+        top="50%"
+        right="20px"
+        sx={{ transform: "translate(0, -50%)" }}
+      >
+        <Box display="flex" gap={1} alignItems="center">
+          <Typography variant="subtitle2" fontWeight={300}>
+            Voted: {option.count}.
+          </Typography>
+          <Typography variant="subtitle2" fontWeight={600}>
+            {votePercent.toFixed(2)}%
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

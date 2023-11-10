@@ -17,7 +17,7 @@ export const getPolls = (page, limit) => async (dispatch) => {
       payload: res.data.data,
     });
   } catch (err) {
-    const error = err.response.data.message;
+    const error = err.response?.data.message;
     dispatch(setAlert(error, "error"));
   }
 };
@@ -68,17 +68,17 @@ export const votePoll = (pollId, optionId) => async (dispatch) => {
   }
 };
 
-export const deletePoll = (pollId) => async (dispatch) => {
+export const deletePoll = (pollId, cb) => async (dispatch) => {
   try {
     const res = await api.delete(`/polls/${pollId}`);
-
+    if (typeof cb === 'function') cb()
     dispatch({
       type: DELETE_POLL,
       payload: res.data.pollId,
     });
-
     dispatch(setAlert("Poll deleted", "success"));
   } catch (err) {
+    console.log(err, err.response);
     const error = err.response.data.message;
     dispatch(setAlert(error, "error"));
   }

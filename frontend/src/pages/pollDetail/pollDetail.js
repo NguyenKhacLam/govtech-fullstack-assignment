@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -8,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { PropTypes } from "prop-types";
-import React, { useEffect, useMemo } from "react";
+import  { useEffect, useMemo,  } from "react";
 import { connect } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -21,33 +22,34 @@ import {
   receiveVote,
   votePoll,
 } from "./../../redux/actions/poll";
-
 let socket;
 
 const Polldetail = ({
   getPoll,
-  votePoll,
   deletePoll,
+  votePoll,
   receiveVote,
   poll: { poll, loading },
-  user: { _id },
+  user,
 }) => {
-  const { pollId } = useParams();
+  const { _id } = user || {};
+
   const navigate = useNavigate();
 
-  const canVote = useMemo(
-    () => poll?.userId !== _id && poll?.userCanVote,
-    [poll, _id]
-  );
+
+  const { pollId } = useParams();
+
+  const [currentId, setCurrentId] = useState();
 
   useEffect(() => {
     getPoll(pollId);
-  }, [getPoll, pollId]);
+  }, [pollId]);
 
   useEffect(() => {
-    socket = io(process.env.REACT_APP_SOCKET_ENDPOINT);
-    socket.emit("join poll", { id: pollId });
+    socket = io("http://localhost:8000");
+    socket.emit("join poll", { id: Number(pollId) });
     socket.on("user voted", (newVote) => {
+      console.log(newVote, ">>>");
       receiveVote(newVote);
     });
 
@@ -56,20 +58,30 @@ const Polldetail = ({
     };
   }, []);
 
-  const handleVote = (optionId) => {
-    socket.emit("vote", { pollId, optionId });
-    votePoll(pollId, optionId);
+  const handleVote = () => {
+    socket.emit("vote", { pollId: pollId, optionId: currentId });
+    votePoll(pollId, currentId);
   };
 
   const handleDeletePoll = () => {
-    deletePoll(pollId);
-    navigate("/");
+    deletePoll(pollId, () => {
+      navigate("/");
+    });
   };
+
+  const handleOnChange = (id) => {
+    setCurrentId(id);
+  };
+
+  const canVote = useMemo(
+    () => poll?.userId !== _id && poll?.userCanVote,
+    [poll, _id]
+  );
 
   return loading || !poll ? (
     <Spinner />
   ) : (
-    <Container>
+    <Container sx={{ height: " 100vh", padding: 2 }}>
       <Box sx={{ mb: 1 }}>
         <Link to="/">Back</Link>
       </Box>
@@ -82,7 +94,6 @@ const Polldetail = ({
       >
         <div>
           <Typography variant="h4">{poll?.name}</Typography>
-          <Typography variant="subtitle1">{poll?.description}</Typography>
         </div>
         {poll?.userId === _id && (
           <Button variant="contained" color="error" onClick={handleDeletePoll}>
@@ -97,21 +108,32 @@ const Polldetail = ({
               poll?.options.map((option, index) => (
                 <OptionItem
                   option={option}
-                  totalVote={poll?.totalVote || 0}
+                  totalVote={poll?.totalVote}
                   key={index}
-                  handleVote={handleVote}
+                  currentId={currentId}
+                  value={option?._id}
+                  onChange={handleOnChange}
                   canVote={canVote}
                 />
               ))}
           </Stack>
+          {canVote && (
+            <Box display="flex" justifyContent="end" alignItems="center" mt={2}>
+              <Button variant="contained" onClick={handleVote}>
+                Vote
+              </Button>
+            </Box>
+          )}
         </CardContent>
       </Card>
 
       {poll?.userId === _id && (
-        <BarChart
-          chartData={poll.options.map((item) => item.count)}
-          chartLabels={poll.options.map((item) => item.name)}
-        />
+        <Box>
+          <BarChart
+            chartData={poll?.options.map((item) => item.count)}
+            chartLabels={poll?.options.map((item) => item.name)}
+          />
+        </Box>
       )}
     </Container>
   );
@@ -119,11 +141,7 @@ const Polldetail = ({
 
 Polldetail.propTypes = {
   getPoll: PropTypes.func.isRequired,
-  votePoll: PropTypes.func.isRequired,
-  receiveVote: PropTypes.func.isRequired,
-  deletePoll: PropTypes.func.isRequired,
   poll: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
