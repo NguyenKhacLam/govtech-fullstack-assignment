@@ -77,7 +77,7 @@ Before you begin, ensure you have the following software installed on your machi
    Duplicate env.example and then rename it to .env and enter your configs
    Note: Please enter like this
 
-   - DB_HOST=database-container (In backend folder)
+   - DB_HOST=database-container (In backend folder, because this is the container name of database)
 
 4. **Build image:**
    In the root directoty, run
