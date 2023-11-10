@@ -1,6 +1,6 @@
 FROM postgres
 
-ENV POSTGRES_DB=poll-app \
+ENV POSTGRES_DB=pollApp \
     POSTGRES_USER=postgres \
     POSTGRES_PASSWORD=lamnk
 

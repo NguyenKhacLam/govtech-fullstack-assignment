@@ -1,5 +1,5 @@
 -- init.sql
-CREATE DATABASE pollApp;
-\c pollApp;
+CREATE DATABASE pollapp;
+COMMIT;
 
 -- Add other SQL commands as needed
