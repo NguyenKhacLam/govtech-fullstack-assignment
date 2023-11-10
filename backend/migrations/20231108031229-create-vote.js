@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Votes", {
+    await queryInterface.createTable("vote", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,15 +10,15 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       userId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       pollId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       optionId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       createdAt: {
