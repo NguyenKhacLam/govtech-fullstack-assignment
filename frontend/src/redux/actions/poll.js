@@ -71,7 +71,7 @@ export const votePoll = (pollId, optionId) => async (dispatch) => {
 export const deletePoll = (pollId) => async (dispatch) => {
   try {
     const res = await api.delete(`/polls/${pollId}`);
-    console.log(res);
+
     dispatch({
       type: DELETE_POLL,
       payload: res.data.pollId,
