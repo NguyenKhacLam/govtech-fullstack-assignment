@@ -40,6 +40,7 @@ Before you begin, ensure you have the following software installed on your machi
    Duplicate env.example and then rename it to .env and enter your configs
 
 5. **Run Migrations and Seeds:**
+   You just need to do this once
 
    ```
         npx sequelize-cli db:migrate
@@ -78,6 +79,8 @@ Before you begin, ensure you have the following software installed on your machi
    Note: Please enter like this
 
    - DB_HOST=database-container (In backend folder, because this is the container name of database)
+   - REACT_APP_BASE_BE_ENDPOINT=http://localhost:8000/api/v1 (In frontend folder, because this is the container name of api will be expose on port 8000)
+   - REACT_APP_SOCKET_ENDPOINT=http://localhost:8000 (In frontend folder, because this is the container name of api will be expose on port 8000)
 
 4. **Build image:**
    In the root directoty, run

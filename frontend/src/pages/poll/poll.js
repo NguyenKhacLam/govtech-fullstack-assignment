@@ -6,10 +6,10 @@ import PollItem from "../../components/PollItem/PollItem";
 import Spinner from "../../components/Spinner/Spinner";
 import { getPolls } from "./../../redux/actions/poll";
 
-const Poll = ({ getPolls, pollData: { polls, loading } }) => {
+const Poll = ({ getPolls, pollData: { polls, loading } = {} }) => {
   useEffect(() => {
     getPolls();
-  }, [getPolls]);
+  }, []);
 
   return loading ? (
     <Spinner />
@@ -17,8 +17,8 @@ const Poll = ({ getPolls, pollData: { polls, loading } }) => {
     <Container>
       <Grid container spacing={2}>
         {polls.map((poll, index) => (
-          <Grid key={index} xs={4} item>
-            <PollItem poll={poll} key={index} />
+          <Grid key={index} item xs={4}>
+            <PollItem poll={poll} />
           </Grid>
         ))}
       </Grid>
