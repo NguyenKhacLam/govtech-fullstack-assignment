@@ -1,4 +1,5 @@
 import {
+  DELETE_POLL,
   GET_POLL,
   GET_POLLS,
   POLL_ERROR,
@@ -28,6 +29,14 @@ function pollReducer(state = initialState, action) {
       return {
         ...state,
         poll: payload,
+        loading: false,
+      };
+
+    case DELETE_POLL:
+      return {
+        ...state,
+        polls: state.polls.filter((i) => i !== payload.pollId),
+        poll: null,
         loading: false,
       };
 

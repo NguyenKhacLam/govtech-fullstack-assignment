@@ -1,4 +1,4 @@
-const { Poll, Vote } = require("./../models");
+const { Poll, Vote, Option } = require("./../models");
 const catchAsync = require("../utils/catchAsync");
 const optionController = require("./option.controller");
 const AppError = require("./../utils/appError");
@@ -83,14 +83,26 @@ const pollController = {
       return next(new AppError("Poll does not found!", 400));
     }
 
-    await User.destroy({
-      where: {
-        pollId,
-      },
-    });
+    if (poll.userId !== req.user.id) {
+      return next(new AppError("You can not delete this poll!", 400));
+    }
+
+    await Promise.all([
+      await Poll.destroy({
+        where: {
+          id: pollId,
+        },
+      }),
+      await Option.destroy({
+        where: {
+          pollId,
+        },
+      }),
+    ]);
 
     res.status(200).json({
       status: "success",
+      pollId,
     });
   }),
 };

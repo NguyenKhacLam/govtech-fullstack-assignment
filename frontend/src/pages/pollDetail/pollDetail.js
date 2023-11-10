@@ -10,23 +10,31 @@ import {
 import { PropTypes } from "prop-types";
 import React, { useEffect, useMemo } from "react";
 import { connect } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import BarChart from "../../components/Chart/Bar/BarChart";
 import OptionItem from "../../components/OptionItem/OptionItem";
 import Spinner from "../../components/Spinner/Spinner";
-import { getPoll, receiveVote, votePoll } from "./../../redux/actions/poll";
+import {
+  deletePoll,
+  getPoll,
+  receiveVote,
+  votePoll,
+} from "./../../redux/actions/poll";
 
 let socket;
 
 const Polldetail = ({
   getPoll,
   votePoll,
+  deletePoll,
   receiveVote,
   poll: { poll, loading },
   user: { id },
 }) => {
   const { pollId } = useParams();
+  const navigate = useNavigate();
+
   const canVote = useMemo(
     () => poll?.userId !== id && poll?.userCanVote,
     [poll, id]
@@ -53,6 +61,11 @@ const Polldetail = ({
     votePoll(Number(pollId), optionId);
   };
 
+  const handleDeletePoll = () => {
+    deletePoll(pollId);
+    navigate("/");
+  };
+
   return loading || !poll ? (
     <Spinner />
   ) : (
@@ -71,7 +84,9 @@ const Polldetail = ({
           <Typography variant="h4">{poll?.name}</Typography>
           <Typography variant="subtitle1">{poll?.description}</Typography>
         </div>
-        <Button variant="contained">Edit poll</Button>
+        <Button variant="contained" color="error" onClick={handleDeletePoll}>
+          Close poll
+        </Button>
       </Box>
       <Card sx={{ mt: 2 }}>
         <CardContent>
@@ -104,6 +119,7 @@ Polldetail.propTypes = {
   getPoll: PropTypes.func.isRequired,
   votePoll: PropTypes.func.isRequired,
   receiveVote: PropTypes.func.isRequired,
+  deletePoll: PropTypes.func.isRequired,
   poll: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
@@ -113,6 +129,9 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps, { getPoll, votePoll, receiveVote })(
-  Polldetail
-);
+export default connect(mapStateToProps, {
+  getPoll,
+  votePoll,
+  receiveVote,
+  deletePoll,
+})(Polldetail);
