@@ -95,4 +95,12 @@ describe("Poll and Voting Routes", () => {
         done();
       });
   });
+
+  it("should return error when creating poll without name", (done) => {});
+
+  it("should return error when creating poll with more than 5 and at least 2 option", (done) => {});
+
+  it("should return error when voting for poll created by the same user", (done) => {});
+
+  it("should return error when voting for poll the same vote twice", (done) => {});
 });
