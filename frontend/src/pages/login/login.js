@@ -1,30 +1,29 @@
 import { Box, Button, Card, Stack, TextField, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
-import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
 import { login } from "./../../redux/actions/auth";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+
+const schema = yup.object().shape({
+  email: yup.string().required("Email is required").email("Email invalid"),
+  password: yup.string().required('Password is required').min(6, "Please enter min 6 character")
+  .max(12, "Please enter max 12 character"),
+});
 
 const Login = ({ login, isAuthenticated }) => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: 'all'
   });
 
-  const [error, setError] = useState({
-    email: false,
-    password: false,
-  });
-
-  const { email, password } = formData;
-
-  const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError({ ...error, [e.target.name]: e.target.value === "" });
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = ({email, password}) => {
     login(email, password);
   };
 
@@ -58,46 +57,47 @@ const Login = ({ login, isAuthenticated }) => {
             </Link>
           </Box>
           <>
-            <Stack spacing={3}>
-              <TextField
-                label="Email"
-                type="email"
-                variant="outlined"
-                value={email}
-                onChange={onChange}
-                margin="normal"
-                fullWidth
-                name="email"
-                InputLabelProps={{ shrink: true }}
-                helperText="Please enter email"
-                error={error.email}
-              />
-              <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                value={password}
-                onChange={onChange}
-                margin="normal"
-                fullWidth
-                name="password"
-                InputLabelProps={{ shrink: true }}
-                helperText="Please enter password"
-                error={error.password}
-              />
-            </Stack>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+              <Stack spacing={3}>
+                <TextField
+                  {...register("email")}
+                  name="email"
+                  label={errors.email ? errors.email?.message : "Email"}
+                  error={!!errors.email}
+                  type="email"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  required
+                  InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                  {...register("password")}
+                  error={!!errors.password}
+                  name="password"
+                  label={
+                    errors.password ? errors.password?.message : "Password"
+                  }
+                  type="password"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  required
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Stack>
 
-            <Button
-              sx={{ mt: 3 }}
-              fullWidth
-              size="large"
-              type="submit"
-              variant="contained"
-              color="primary"
-              onClick={onSubmit}
-            >
-              Sign In
-            </Button>
+              <Button
+                sx={{ mt: 3 }}
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
+                Sign In
+              </Button>
+            </form>
           </>
         </Card>
       </Stack>

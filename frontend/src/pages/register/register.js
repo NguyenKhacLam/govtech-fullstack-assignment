@@ -1,40 +1,40 @@
 import { Box, Button, Card, Stack, TextField, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
-import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
 import { setAlert } from "./../../redux/actions/alert";
 import { register } from "./../../redux/actions/auth";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 
-const Register = ({ setAlert, register, isAuthenticated }) => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+const schema = yup.object({
+  username: yup.string().required("User name is required"),
+  email: yup.string().required("Email is required").email("Email invalid"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(6, "Please enter min 6 character")
+    .max(12, "Please enter max 12 character"),
+  confirmPassword: yup.string().required("Confirm password is required") .oneOf(
+    [yup.ref('password'), null],
+    'Confirm password not match password',
+  ),
+})
+
+const Register = ({ register: handleRegister, isAuthenticated }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "all"
   });
 
-  const [error, setError] = useState({
-    username: false,
-    email: false,
-    password: false,
-    confirmPassword: false,
-  });
-
-  const { username, email, password, confirmPassword } = formData;
-
-  const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError({ ...error, [e.target.name]: e.target.value === "" });
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setAlert("Password is not matched", "error");
-    } else {
-      register({ username, email, password });
-    }
+  const onSubmit = ({ username, email, password }) => {
+    console.log("submit");
+    handleRegister({ username, email, password });
   };
 
   if (isAuthenticated) {
@@ -67,76 +67,77 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             </Link>
           </Box>
           <>
-            <Stack spacing={3}>
-              <TextField
-                InputLabelProps={{ shrink: true }}
-                label="Username"
-                type="text"
-                variant="outlined"
-                value={username}
-                onChange={onChange}
-                margin="normal"
-                fullWidth
-                name="username"
-                required
-                helperText="Please enter username"
-                error={error.username}
-              />
-              <TextField
-                InputLabelProps={{ shrink: true }}
-                label="Email"
-                type="email"
-                variant="outlined"
-                value={email}
-                onChange={onChange}
-                margin="normal"
-                fullWidth
-                name="email"
-                required
-                helperText="Please enter email"
-                error={error.email}
-              />
-              <TextField
-                InputLabelProps={{ shrink: true }}
-                label="Password"
-                type="password"
-                variant="outlined"
-                value={password}
-                onChange={onChange}
-                margin="normal"
-                fullWidth
-                name="password"
-                required
-                helperText="Please enter password"
-                error={error.password}
-              />
-              <TextField
-                InputLabelProps={{ shrink: true }}
-                label="Confirm password"
-                type="password"
-                variant="outlined"
-                value={confirmPassword}
-                onChange={onChange}
-                margin="normal"
-                fullWidth
-                name="confirmPassword"
-                required
-                helperText="Please reenter password"
-                error={error.confirmPassword}
-              />
-            </Stack>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+              <Stack spacing={3}>
+                <TextField
+                  {...register("username")}
+                  name="username"
+                  label={
+                    errors.username ? errors.username?.message : "User Name"
+                  }
+                  error={!!errors.username}
+                  type="text"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  required
+                  InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                  {...register("email")}
+                  name="email"
+                  label={errors.email ? errors.email?.message : "Email"}
+                  error={!!errors.email}
+                  type="email"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  required
+                  InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                  {...register("password")}
+                  name="password"
+                  label={
+                    errors.password ? errors.password?.message : "Password"
+                  }
+                  error={!!errors.password}
+                  InputLabelProps={{ shrink: true }}
+                  type="password"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  required
+                />
+                <TextField
+                  {...register("confirmPassword")}
+                  name="confirmPassword"
+                  label={
+                    errors.confirmPassword
+                      ? errors.confirmPassword?.message
+                      : "Confirm password"
+                  }
+                  error={!!errors.confirmPassword}
+                  type="password"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  required
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Stack>
 
-            <Button
-              sx={{ mt: 3 }}
-              fullWidth
-              size="large"
-              type="submit"
-              variant="contained"
-              color="primary"
-              onClick={onSubmit}
-            >
-              Register
-            </Button>
+              <Button
+                sx={{ mt: 3 }}
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
+                Register
+              </Button>
+            </form>
           </>
         </Card>
       </Stack>
