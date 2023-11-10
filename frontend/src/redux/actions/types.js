@@ -1,0 +1,16 @@
+export const SET_ALERT = "SET_ALERT";
+export const REMOVE_ALERT = "REMOVE_ALERT";
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const REGISTER_FAIL = "REGISTER_FAIL";
+export const USER_LOADED = "USER_LOADED";
+export const AUTH_ERROR = "AUTH_ERROR";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAIL = "LOGIN_FAIL";
+export const LOGOUT = "LOGOUT";
+export const GET_POLL = "GET_POLL";
+export const GET_POLLS = "GET_POLLS";
+export const POLL_ERROR = "POLL_ERROR";
+export const DELETE_POLL = "DELETE_POST";
+export const ADD_POLL = "ADD_POST";
+export const VOTE = "VOTE";
+export const RECEIVE_VOTE = "RECEIVE_VOTE";

@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  api:
+    container_name: api-container
+    restart: always
+    build: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    networks:
+      - pollapp
+
+  client:
+    container_name: client-container
+    restart: always
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - pollapp
+
+  database:
+    build: ./database
+    container_name: database-container
+    environment:
+      POSTGRES_PASSWORD: lamnk
+    ports:
+      - "5432:5432"
+    networks:
+      - pollapp
+    volumes:
+      - db-data:/data/db
+      - ./database:/docker-entrypoint-initdb.d
+
+networks:
+  pollapp:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
