@@ -12,7 +12,7 @@ describe("Poll and Voting Routes", () => {
   before((done) => {
     chai
       .request(app)
-      .post("/api/v1/users/register")
+      .post("/api/v1/users/signup")
       .send({ username: "demo", email: "demo@gmail.com", password: "123456" })
       .end((err, res) => {
         if (err) {
