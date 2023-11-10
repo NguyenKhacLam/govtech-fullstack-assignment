@@ -36,10 +36,10 @@ export const getPoll = (pollId) => async (dispatch) => {
   }
 };
 
-export const addPoll = (formData) => async (dispatch) => {
+export const addPoll = (formData,cb) => async (dispatch) => {
   try {
     const res = await api.post("/polls", formData);
-
+    if (typeof cb === 'function') cb()
     dispatch({
       type: ADD_POLL,
       payload: res.data.data,

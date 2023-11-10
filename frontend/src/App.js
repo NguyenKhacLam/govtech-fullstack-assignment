@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import AlertComponent from "./components/alert/alert";
-import NavBar from "./components/appbar/Navbar";
 import CreatePoll from "./pages/createPoll/createPoll";
 import Login from "./pages/login/login";
 import PageNotFound from "./pages/pageNotFound/PageNotFound";

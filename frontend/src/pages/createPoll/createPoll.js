@@ -1,3 +1,4 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Backdrop,
   Box,
@@ -9,54 +10,86 @@ import {
   Typography,
 } from "@mui/material";
 import { PropTypes } from "prop-types";
-import React, { useState } from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { connect, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { setAlert } from "../../redux/actions/alert";
 import { addPoll } from "./../../redux/actions/poll";
 
+const schema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  description: yup.string().required("Description is required"),
+});
+
 export const CreatePoll = ({ addPoll }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "all",
+  });
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [optionName, setOptionName] = useState("");
   const [options, setOption] = useState([]);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-  });
-
-  const { name, description } = formData;
+  const [errorOption, setErrorOption] = useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleAddOption = () => {
-    if (optionName !== "") {
-      setOption([...options, { name: optionName }]);
-      setOptionName("");
+    if (!optionName) {
+      setErrorOption("Option name is required");
+      return;
     }
+
+    setOption([...options, { name: optionName }]);
+    setOptionName("");
   };
 
+  useEffect(() => {
+    if (optionName) {
+      setErrorOption("");
+    }
+  }, [optionName]);
+
   const handleRemoveOption = (indexToRemove) => {
-    const newOption = options.filter((item, index) => index !== indexToRemove);
+    const newOption = options.filter((_, index) => index !== indexToRemove);
     setOption(newOption);
   };
 
   const onChange = (e) => {
     if (e.target.name === "optionName") {
       setOptionName(e.target.value);
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
     }
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    addPoll({
-      name: formData.name,
-      description: formData.description,
-      options,
-    });
+  const afterAddPoll = () => {
     navigate("/");
+  };
+
+  const onSubmit = ({ name, description }) => {
+    if (options.length < 2 || options.length > 5) {
+      dispatch(
+        setAlert("Poll must have at least 2 option and max 5 options", "error")
+      );
+      return;
+    }
+
+    addPoll(
+      {
+        name,
+        description,
+        options,
+      },
+      afterAddPoll
+    );
   };
 
   return (
@@ -74,55 +107,56 @@ export const CreatePoll = ({ addPoll }) => {
         <Typography variant="h4" component="h2" gutterBottom>
           Create Poll
         </Typography>
-        <TextField
-          label="Name"
-          type="text"
-          variant="outlined"
-          value={name}
-          onChange={onChange}
-          margin="normal"
-          fullWidth
-          name="name"
-          required
-        />
-        <TextField
-          label="Description"
-          type="text"
-          variant="outlined"
-          value={description}
-          onChange={onChange}
-          margin="normal"
-          fullWidth
-          name="description"
-          required
-        />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "15px",
-          }}
-        >
-          <Typography>Options</Typography>
-          <Button variant="outlined" onClick={handleOpen}>
-            Add option
-          </Button>
-        </div>
 
-        {options &&
-          options.map((item, index) => (
-            <div
-              style={{ display: "flex", justifyContent: "space-between" }}
-              key={index}
-            >
-              <Typography>{item.name}</Typography>
-              <Button onClick={() => handleRemoveOption(index)}>X</Button>
-            </div>
-          ))}
-        <Button variant="contained" color="primary" onClick={onSubmit}>
-          Create Poll
-        </Button>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <TextField
+            {...register("name")}
+            name="name"
+            label={errors.name ? errors.name?.message : "Name"}
+            error={!!errors.name}
+            type="text"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            required
+          />
+          <TextField
+            {...register("description")}
+            label={"Description"}
+            name="description"
+            type="text"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "15px",
+            }}
+          >
+            <Typography>Options</Typography>
+            <Button variant="outlined" onClick={handleOpen}>
+              Add option
+            </Button>
+          </div>
+
+          {options &&
+            options.map((item, index) => (
+              <div
+                style={{ display: "flex", justifyContent: "space-between" }}
+                key={index}
+              >
+                <Typography>{item.name}</Typography>
+                <Button onClick={() => handleRemoveOption(index)}>X</Button>
+              </div>
+            ))}
+          <Button fullWidth variant="contained" color="primary" type="submit">
+            Create Poll
+          </Button>
+        </form>
       </div>
 
       <Modal
@@ -155,17 +189,18 @@ export const CreatePoll = ({ addPoll }) => {
               Create option
             </Typography>
             <TextField
-              label="Option name"
               type="text"
+              label={errorOption ? errorOption : "Option name"}
+              error={!!errorOption}
               value={optionName}
               name="optionName"
               variant="outlined"
               margin="normal"
               fullWidth
-              onChange={onChange}
               required
+              onChange={onChange}
             />
-            <Button variant="outlined" onClick={handleAddOption}>
+            <Button variant="outlined" sx={{ mt: 1 }} onClick={handleAddOption}>
               Add option
             </Button>
           </Box>
