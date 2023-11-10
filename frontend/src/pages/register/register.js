@@ -1,4 +1,4 @@
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, Stack, TextField, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 import React, { useState } from "react";
 import { connect } from "react-redux";
@@ -34,71 +34,97 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   }
 
   return (
-    <Container maxWidth="xs">
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <Typography variant="h4" component="h2" gutterBottom>
-          Register
-        </Typography>
-        <TextField
-          label="Username"
-          type="text"
-          variant="outlined"
-          value={username}
-          onChange={onChange}
-          margin="normal"
-          fullWidth
-          name="username"
-          required
-        />
-        <TextField
-          label="Email"
-          type="email"
-          variant="outlined"
-          value={email}
-          onChange={onChange}
-          margin="normal"
-          fullWidth
-          name="email"
-          required
-        />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          value={password}
-          onChange={onChange}
-          margin="normal"
-          fullWidth
-          name="password"
-          required
-        />
-        <TextField
-          label="Confirm password"
-          type="password"
-          variant="outlined"
-          value={confirmPassword}
-          onChange={onChange}
-          margin="normal"
-          fullWidth
-          name="confirmPassword"
-          required
-        />
-        <Button variant="contained" color="primary" onClick={onSubmit}>
-          Create account
-        </Button>
-        <Typography align="center" marginTop={1}>
-          Already have an account? <Link to="/login">Sign In</Link>
-        </Typography>
-      </div>
-    </Container>
+    <Box
+      sx={{
+        height: "100vh",
+      }}
+    >
+      <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
+        <Card
+          sx={{
+            p: 5,
+            width: 1,
+            maxWidth: 420,
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="h4">Register</Typography>
+
+          <Box display="flex" gap={0.5} sx={{ mt: 2, mb: 2 }}>
+            <Typography variant="body2"> Already have an account?</Typography>
+            <Link to="/login">
+              <Typography variant="subtitle2" sx={{ ml: 0.5 }}>
+                Sign In
+              </Typography>
+            </Link>
+          </Box>
+          <>
+            <Stack spacing={3}>
+              <TextField
+                InputLabelProps={{ shrink: true }}
+                label="Username"
+                type="text"
+                variant="outlined"
+                value={username}
+                onChange={onChange}
+                margin="normal"
+                fullWidth
+                name="username"
+                required
+              />
+              <TextField
+                InputLabelProps={{ shrink: true }}
+                label="Email"
+                type="email"
+                variant="outlined"
+                value={email}
+                onChange={onChange}
+                margin="normal"
+                fullWidth
+                name="email"
+                required
+              />
+              <TextField
+                InputLabelProps={{ shrink: true }}
+                label="Password"
+                type="password"
+                variant="outlined"
+                value={password}
+                onChange={onChange}
+                margin="normal"
+                fullWidth
+                name="password"
+                required
+              />
+              <TextField
+                InputLabelProps={{ shrink: true }}
+                label="Confirm password"
+                type="password"
+                variant="outlined"
+                value={confirmPassword}
+                onChange={onChange}
+                margin="normal"
+                fullWidth
+                name="confirmPassword"
+                required
+              />
+            </Stack>
+
+            <Button
+              sx={{ mt: 3 }}
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              color="primary"
+              onClick={onSubmit}
+            >
+              Register
+            </Button>
+          </>
+        </Card>
+      </Stack>
+    </Box>
   );
 };
 

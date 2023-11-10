@@ -1,7 +1,6 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const app = require("./../app");
-const { log } = require("console");
 require("dotenv").config();
 
 const expect = chai.expect;

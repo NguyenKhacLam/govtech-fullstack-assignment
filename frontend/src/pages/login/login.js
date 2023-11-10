@@ -1,4 +1,4 @@
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, Stack, TextField, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 import React, { useState } from "react";
 import { connect } from "react-redux";
@@ -27,48 +27,71 @@ const Login = ({ login, isAuthenticated }) => {
   }
 
   return (
-    <Container maxWidth="xs">
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <Typography variant="h4" component="h2" gutterBottom>
-          Login
-        </Typography>
-        <TextField
-          label="Email"
-          type="email"
-          variant="outlined"
-          value={email}
-          onChange={onChange}
-          margin="normal"
-          fullWidth
-          name="email"
-        />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          value={password}
-          onChange={onChange}
-          margin="normal"
-          fullWidth
-          name="password"
-        />
-        <Button variant="contained" color="primary" onClick={onSubmit}>
-          Login
-        </Button>
-        <Typography align="center" marginTop={1}>
-          Don't have an account yet?
-          <Link to="/register">Register an account</Link>
-        </Typography>
-      </div>
-    </Container>
+    <Box
+      sx={{
+        height: "100vh",
+      }}
+    >
+      <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
+        <Card
+          sx={{
+            p: 5,
+            width: 1,
+            maxWidth: 420,
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="h4">Sign in</Typography>
+
+          <Box display="flex" gap={0.5} sx={{ mt: 2, mb: 2 }}>
+            <Typography variant="body2">Don't have an account yet?</Typography>
+            <Link to="/register">
+              <Typography variant="subtitle2" sx={{ ml: 0.5 }}>
+                Register an account
+              </Typography>
+            </Link>
+          </Box>
+          <>
+            <Stack spacing={3}>
+              <TextField
+                label="Email"
+                type="email"
+                variant="outlined"
+                value={email}
+                onChange={onChange}
+                margin="normal"
+                fullWidth
+                name="email"
+                InputLabelProps={{ shrink: true }}
+              />
+              <TextField
+                label="Password"
+                type="password"
+                variant="outlined"
+                value={password}
+                onChange={onChange}
+                margin="normal"
+                fullWidth
+                name="password"
+                InputLabelProps={{ shrink: true }}
+              />
+            </Stack>
+
+            <Button
+              sx={{ mt: 3 }}
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              color="primary"
+              onClick={onSubmit}
+            >
+              Sign In
+            </Button>
+          </>
+        </Card>
+      </Stack>
+    </Box>
   );
 };
 

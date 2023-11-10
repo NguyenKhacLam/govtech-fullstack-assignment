@@ -34,7 +34,7 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
             </Button>
             <div style={{ flexGrow: 1 }}></div>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <Typography>{user ? user.username : ""}</Typography>
+              <Typography>{user?.username}</Typography>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -72,7 +72,6 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 
 NavBar.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
 };
 

@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import { PropTypes } from "prop-types";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
@@ -15,9 +15,13 @@ const Poll = ({ getPolls, pollData: { polls, loading } }) => {
     <Spinner />
   ) : (
     <Container>
-      {polls.map((poll, index) => (
-        <PollItem poll={poll} key={index} />
-      ))}
+      <Grid container spacing={2}>
+        {polls.map((poll, index) => (
+          <Grid key={index} xs={4} item>
+            <PollItem poll={poll} key={index} />
+          </Grid>
+        ))}
+      </Grid>
     </Container>
   );
 };
