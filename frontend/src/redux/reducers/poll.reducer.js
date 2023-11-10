@@ -41,7 +41,7 @@ function pollReducer(state = initialState, action) {
 
     case RECEIVE_VOTE:
       const votedOption = state.poll.options.find(
-        (option) => option.id === action.payload.optionId
+        (option) => option._id === action.payload.optionId
       );
 
       if (votedOption) {
@@ -51,7 +51,7 @@ function pollReducer(state = initialState, action) {
             ...state.poll,
             totalVote: state.poll.totalVote + 1,
             options: state.poll.options.map((option) =>
-              option.id === action.payload.optionId
+              option._id === action.payload.optionId
                 ? { ...option, count: option.count + 1 }
                 : option
             ),
@@ -62,11 +62,19 @@ function pollReducer(state = initialState, action) {
 
     case VOTE:
       const vote = state.poll.options.find(
-        (option) => option.id === action.payload.optionId
+        (option) => option._id === action.payload.optionId
       );
 
       // If the option exists, update the count and totalVote
       if (vote) {
+        console.log(
+          state.poll.options.map((option) =>
+            option._id === action.payload.optionId
+              ? { ...option, count: option.count + 1 }
+              : option
+          ),
+          ">>>>>"
+        );
         return {
           ...state,
           poll: {
@@ -74,7 +82,7 @@ function pollReducer(state = initialState, action) {
             userCanVote: false,
             totalVote: state.poll.totalVote + 1,
             options: state.poll.options.map((option) =>
-              option.id === action.payload.optionId
+              option._id === action.payload.optionId
                 ? { ...option, count: option.count + 1 }
                 : option
             ),
