@@ -10,7 +10,6 @@ DB_NAME=pollapp
 # Function to check if the database is ready
 check_db() {
     npx sequelize-cli db:migrate
-    npx sequelize-cli db:seed:all
 }
 
 # Wait for the database to be ready
