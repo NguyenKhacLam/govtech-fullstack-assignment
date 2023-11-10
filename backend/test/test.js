@@ -12,8 +12,8 @@ describe("Poll and Voting Routes", () => {
   before((done) => {
     chai
       .request(app)
-      .post("/api/v1/users/login")
-      .send({ email: "khaclam2409@gmail.com", password: "123456" })
+      .post("/api/v1/users/register")
+      .send({ username: "demo", email: "demo@gmail.com", password: "123456" })
       .end((err, res) => {
         if (err) {
           console.error(err);
