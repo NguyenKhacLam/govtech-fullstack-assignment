@@ -78,6 +78,7 @@ Before you begin, ensure you have the following software installed on your machi
    Note: Please enter like this
 
    - DB_HOST=database-container (In backend folder, because this is the container name of database)
+   - REACT_APP_BASE_BE_ENDPOINT=http://localhost:8000/api/v1 (In frontend folder, because this is the container name of api will be expose on port 8000)
 
 4. **Build image:**
    In the root directoty, run
