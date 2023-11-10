@@ -10,7 +10,9 @@ const port = process.env.PORT || 8000;
 async function start() {
   try {
     mongoose
-      .connect("mongodb://127.0.0.1:27017/test")
+      .connect(
+        `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
+      )
       .then(() => console.log("DB connection successful!"));
 
     const expressServer = app.listen(port, () => {

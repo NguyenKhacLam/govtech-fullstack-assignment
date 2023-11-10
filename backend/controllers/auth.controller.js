@@ -55,7 +55,7 @@ const authController = {
   getMe: catchAsync(async (req, res, next) => {
     const userId = req.user.id;
 
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findById(userId);
 
     res.status(200).json({
       status: "success",

@@ -58,7 +58,7 @@ export const votePoll = (pollId, optionId) => async (dispatch) => {
 
     dispatch({
       type: VOTE,
-      payload: res.data.pollId,
+      payload: res.data.data.pollId,
     });
 
     dispatch(setAlert("You have voted", "success"));

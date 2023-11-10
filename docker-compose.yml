@@ -23,17 +23,16 @@ services:
       - pollapp
 
   database:
-    build: ./database
+    image: mongo
     container_name: database-container
     environment:
       POSTGRES_PASSWORD: lamnk
     ports:
-      - "5432:5432"
+      - "27017:27017"
     networks:
       - pollapp
     volumes:
       - db-data:/data/db
-      - ./database:/docker-entrypoint-initdb.d
 
 networks:
   pollapp:
