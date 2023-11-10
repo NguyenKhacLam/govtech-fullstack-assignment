@@ -20,7 +20,6 @@ import { addPoll } from "./../../redux/actions/poll";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
-  description: yup.string().required("Description is required"),
 });
 
 export const CreatePoll = ({ addPoll }) => {
