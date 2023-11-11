@@ -37,7 +37,7 @@ function OptionItem({
               onChange={() => {
                 onChange(value);
               }}
-              checked={currentId == value}
+              checked={currentId === value}
             />
           )}
 
