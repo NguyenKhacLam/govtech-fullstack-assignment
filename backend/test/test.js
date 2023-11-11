@@ -51,8 +51,6 @@ describe("Poll and Voting Routes", () => {
         done();
       });
 
-    console.log(loginResponse.body.token, ">>>>>");
-
     authToken = loginResponse.body.token;
   });
 
@@ -167,27 +165,4 @@ describe("Poll and Voting Routes", () => {
         done();
       });
   });
-
-  // it("should return error when voting for poll created by the same user", async (done) => {});
-
-  // it("should return error when voting for poll the same vote twice", (done) => {});
-
-  // after(async () => {
-  //   // Disconnect from the in-memory MongoDB server
-  //   await mongoose.disconnect();
-  //   // Stop the in-memory MongoDB server
-  //   await mongoServer.stop();
-
-  //   // Additional cleanup steps (e.g., delete records, drop database, etc.)
-  //   // await cleanupDatabase();
-  // });
-
-  // async function cleanupDatabase() {
-  //   const collections = mongoose.connection.collections;
-
-  //   for (const key in collections) {
-  //     const collection = collections[key];
-  //     await collection.deleteMany();
-  //   }
-  // }
 });

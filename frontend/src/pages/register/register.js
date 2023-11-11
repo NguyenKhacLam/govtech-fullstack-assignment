@@ -1,12 +1,12 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Card, Stack, TextField, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
+import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
+import * as yup from "yup";
 import { setAlert } from "./../../redux/actions/alert";
 import { register } from "./../../redux/actions/auth";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
 
 const schema = yup.object({
   username: yup.string().required("User name is required"),
@@ -16,11 +16,11 @@ const schema = yup.object({
     .required("Password is required")
     .min(6, "Please enter min 6 character")
     .max(12, "Please enter max 12 character"),
-  confirmPassword: yup.string().required("Confirm password is required") .oneOf(
-    [yup.ref('password'), null],
-    'Confirm password not match password',
-  ),
-})
+  confirmPassword: yup
+    .string()
+    .required("Confirm password is required")
+    .oneOf([yup.ref("password"), null], "Confirm password not match password"),
+});
 
 const Register = ({ register: handleRegister, isAuthenticated }) => {
   const {
@@ -29,11 +29,10 @@ const Register = ({ register: handleRegister, isAuthenticated }) => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "all"
+    mode: "all",
   });
 
   const onSubmit = ({ username, email, password }) => {
-    console.log("submit");
     handleRegister({ username, email, password });
   };
 

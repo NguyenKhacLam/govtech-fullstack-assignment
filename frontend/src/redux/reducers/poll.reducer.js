@@ -67,14 +67,6 @@ function pollReducer(state = initialState, action) {
 
       // If the option exists, update the count and totalVote
       if (vote) {
-        console.log(
-          state.poll.options.map((option) =>
-            option._id === action.payload.optionId
-              ? { ...option, count: option.count + 1 }
-              : option
-          ),
-          ">>>>>"
-        );
         return {
           ...state,
           poll: {

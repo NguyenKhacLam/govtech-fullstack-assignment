@@ -36,10 +36,10 @@ export const getPoll = (pollId) => async (dispatch) => {
   }
 };
 
-export const addPoll = (formData,cb) => async (dispatch) => {
+export const addPoll = (formData, cb) => async (dispatch) => {
   try {
     const res = await api.post("/polls", formData);
-    if (typeof cb === 'function') cb()
+    if (typeof cb === "function") cb();
     dispatch({
       type: ADD_POLL,
       payload: res.data.data,
@@ -71,14 +71,13 @@ export const votePoll = (pollId, optionId) => async (dispatch) => {
 export const deletePoll = (pollId, cb) => async (dispatch) => {
   try {
     const res = await api.delete(`/polls/${pollId}`);
-    if (typeof cb === 'function') cb()
+    if (typeof cb === "function") cb();
     dispatch({
       type: DELETE_POLL,
       payload: res.data.pollId,
     });
     dispatch(setAlert("Poll deleted", "success"));
   } catch (err) {
-    console.log(err, err.response);
     const error = err.response.data.message;
     dispatch(setAlert(error, "error"));
   }
