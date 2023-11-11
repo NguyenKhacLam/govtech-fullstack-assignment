@@ -6,11 +6,12 @@ const AppError = require("./../utils/appError");
 
 const pollController = {
   getAllPolls: catchAsync(async (req, res, next) => {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
-    const skip = (page - 1) * limit;
+    // const page = req.query.page || 1;
+    // const limit = req.query.limit || 10;
+    // const skip = (page - 1) * limit;
 
-    const polls = await Poll.find().skip(skip).limit(limit).sort("-createdAt");
+    // const polls = await Poll.find().skip(skip).limit(limit).sort("-createdAt");
+    const polls = await Poll.find().sort("-createdAt");
 
     res.status(200).json({
       status: "success",
