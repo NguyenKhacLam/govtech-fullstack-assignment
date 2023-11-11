@@ -86,6 +86,8 @@ Before you begin, ensure you have the following software installed on your machi
 
    ```
 
+   Then wait for the application to run
+
 6. **Open the Application**:
    Open your browser and navigate to http://localhost:3000 to view the application.
 
