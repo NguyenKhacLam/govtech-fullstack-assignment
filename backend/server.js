@@ -11,11 +11,7 @@ async function start() {
   try {
     mongoose
       .connect(
-        `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
-        {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        }
+        `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
       )
       .then(() => console.log("DB connection successful!"));
 
