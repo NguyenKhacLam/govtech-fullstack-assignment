@@ -1,18 +1,26 @@
-import { Button, Container, Grid } from "@mui/material";
+import { Button, Container, Grid, Pagination, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PollItem from "../../components/PollItem/PollItem";
 import Spinner from "../../components/Spinner/Spinner";
 import { getPolls } from "./../../redux/actions/poll";
 
-const Poll = ({ getPolls, pollData: { polls, loading } = {} }) => {
+const POLL_PER_PAGE = 10;
+
+const Poll = ({ getPolls, pollData: { polls, loading, total } = {} }) => {
+  const [page, setPage] = useState(1);
   useEffect(() => {
-    getPolls();
-  }, []);
+    getPolls(page, POLL_PER_PAGE);
+  }, [page]);
 
   const handleRefesh = () => {
-    getPolls();
+    getPolls(1, POLL_PER_PAGE);
+    setPage(1);
+  };
+
+  const handleChange = (event, value) => {
+    setPage(value);
   };
 
   return loading ? (
@@ -23,12 +31,18 @@ const Poll = ({ getPolls, pollData: { polls, loading } = {} }) => {
         Refesh
       </Button>
       <Grid container spacing={2}>
+        {polls.length === 0 && <Typography>No Poll</Typography>}
         {polls.map((poll, index) => (
           <Grid key={index} item xs={4}>
             <PollItem poll={poll} />
           </Grid>
         ))}
       </Grid>
+      <Pagination
+        count={Math.ceil(total / POLL_PER_PAGE)}
+        page={page}
+        onChange={handleChange}
+      />
     </Container>
   );
 };
