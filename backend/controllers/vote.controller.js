@@ -17,12 +17,17 @@ const voteController = {
     ];
 
     if (!poll || !option) {
-      return next(new AppError("Poll or option is not found", 404));
+      return next(
+        new AppError(
+          "Poll or option is not found. May be it deleted. Please choose another poll",
+          404
+        )
+      );
     }
 
-    // if (poll.userId === req.user.id) {
-    //   return next(new AppError("You can not vote to your own poll", 400));
-    // }
+    if (poll.userId === req.user.id) {
+      return next(new AppError("You can not vote to your own poll", 400));
+    }
 
     const isVoted = option.votes
       .map((i) => i._id.toString())

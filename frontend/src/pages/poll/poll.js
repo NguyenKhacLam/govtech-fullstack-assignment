@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material";
+import { Button, Container, Grid } from "@mui/material";
 import { PropTypes } from "prop-types";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
@@ -11,10 +11,17 @@ const Poll = ({ getPolls, pollData: { polls, loading } = {} }) => {
     getPolls();
   }, []);
 
+  const handleRefesh = () => {
+    getPolls();
+  };
+
   return loading ? (
     <Spinner />
   ) : (
     <Container>
+      <Button onClick={handleRefesh} variant="outlined" color="info">
+        Refesh
+      </Button>
       <Grid container spacing={2}>
         {polls.map((poll, index) => (
           <Grid key={index} item xs={4}>
