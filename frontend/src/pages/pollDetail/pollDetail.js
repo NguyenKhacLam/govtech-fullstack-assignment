@@ -47,7 +47,6 @@ const Polldetail = ({
     socket = io("http://localhost:8000");
     socket.emit("join poll", { id: pollId });
     socket.on("user voted", (newVote) => {
-      console.log(newVote, ">>>");
       receiveVote(newVote);
     });
 
