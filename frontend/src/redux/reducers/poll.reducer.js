@@ -11,6 +11,7 @@ const initialState = {
   polls: [],
   poll: null,
   loading: true,
+  total: 0,
   error: {},
 };
 
@@ -22,6 +23,7 @@ function pollReducer(state = initialState, action) {
       return {
         ...state,
         polls: payload.polls,
+        total: payload.total,
         loading: false,
       };
 
